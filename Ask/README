@@ -9,7 +9,42 @@ Directory Structure
 -------------------------------------------------------------------------------
 
 Parse/              contains the files to parse the wiki article
+
 Main/               contains the top level files to run the question generation
                     code
+  main.py           the main top level script that is called to run the asker
 
+Generate/           contains the code for question generation -- see section
+                    on generation for more info
+  easy1.py          an easy question generation algorithm
+  generate.py       the main quetion generation module
 
+-------------------------------------------------------------------------------
+Generation
+-------------------------------------------------------------------------------
+
+main.py runs as follows:
+  - registers a list of functions which take in a wiki article and
+    return one question as a string
+  - it then calls generate.generate(wiki, n), which generates n questions
+    based on the wikipedia article. This function randomly selects one of
+    the registered functions and tries to generate a question based on 
+    the wikipedia article; it repeats the process till n questions are
+    generated
+
+In order to write a question generation function:
+  - create a file `foo.py`
+  - write your function `foo` which takes wiki articles and returns one
+    question as a string
+  - `import path_to_foo/foo.py` in `main.py`
+  - add your function `foo` to the register list in `main.py`
+  - TODO: create a way to test a single module instead of randomly testing
+    them all
+
+-------------------------------------------------------------------------------
+Sources
+-------------------------------------------------------------------------------
+
+List any sources that we used.
+
+  - http://www.nltk.org/book/
