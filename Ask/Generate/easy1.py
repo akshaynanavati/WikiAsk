@@ -1,3 +1,10 @@
+# easy1.py
+# author : Akshay Nanavati
+#
+# implements a basic algorithm for generating easy
+# yes no questions by finding sentences of the form
+# X [is | was] Y -> [is | was] X y?
+
 import random, string
 
 def swap(sent):
