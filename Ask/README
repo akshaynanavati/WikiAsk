@@ -4,12 +4,17 @@ Ask
 
 This directory contains the source code for the ask portion of the project.
 
+To run the program run `python main.py <wiki file> <n>` where wiki file is
+the name of the file to be run and n is the number of questions.
+
 -------------------------------------------------------------------------------
 Directory Structure
 -------------------------------------------------------------------------------
 
 Parse/              contains the files to parse the wiki article
-
+  parse.py          will eventually contain a good parser; right now its
+                    pretty basic
+                    
 Main/               contains the top level files to run the question generation
                     code
   main.py           the main top level script that is called to run the asker
@@ -18,6 +23,9 @@ Generate/           contains the code for question generation -- see section
                     on generation for more info
   easy1.py          an easy question generation algorithm
   generate.py       the main quetion generation module
+
+Wiki/               contain wiki articles/other test files
+  test1.txt         a very simple test file
 
 -------------------------------------------------------------------------------
 Generation
@@ -33,10 +41,10 @@ main.py runs as follows:
     generated
 
 In order to write a question generation function:
-  - create a file `foo.py`
+  - create a file `foo.py` in Generate/
   - write your function `foo` which takes wiki articles and returns one
     question as a string
-  - `import path_to_foo/foo.py` in `main.py`
+  - `import foo.py` in `main.py`
   - add your function `foo` to the register list in `main.py`
   - TODO: create a way to test a single module instead of randomly testing
     them all
