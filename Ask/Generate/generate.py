@@ -1,3 +1,8 @@
+# generate.py
+# author: Akshay Nanavati
+#
+# generates n questions based on a wikipedia article
+
 import random
 
 gens = []
