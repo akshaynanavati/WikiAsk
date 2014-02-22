@@ -1,0 +1,15 @@
+-------------------------------------------------------------------------------
+Ask
+-------------------------------------------------------------------------------
+
+This directory contains the source code for the ask portion of the project.
+
+-------------------------------------------------------------------------------
+Directory Structure
+-------------------------------------------------------------------------------
+
+Parse/              contains the files to parse the wiki article
+Main/               contains the top level files to run the question generation
+                    code
+
+
