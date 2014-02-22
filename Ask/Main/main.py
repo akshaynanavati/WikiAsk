@@ -1,3 +1,8 @@
+# main.py
+# author: Akshay Nanavati
+# 
+# the top level entrypoint for the ask program
+
 import sys, os, string
 
 sys.path.append("../Parse")
