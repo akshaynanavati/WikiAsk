@@ -1,0 +1,5 @@
+http://en.wikipedia.org/wiki/Okapi_BM25
+http://trec.nist.gov/pubs/trec9/papers/msrc-qa.pdf
+http://www.nltk.org/book/
+
+https://gist.github.com/322906/90dea659c04570757cccf0ce1e6d26c9d06f9283
