@@ -46,7 +46,6 @@ class Finder:
         entities = []
         for tree in chunked:
             entities.extend(self.extract_entity_names(tree, kind))
-        print set(entities)
         return set(entities)
 
     # BM25 Implementation
@@ -132,10 +131,5 @@ class Finder:
             for sent in sents:
                 sent = ' '.join(sent)
                 entities = self.get_entities(sent, "PERSON")
-                print sent
-                print entities
-                return
+                return set(entities)
         return None
-
-c = Finder("a1.txt")
-print c.search_who(["plays", "Tottenham", "Hotspur", "United", "States", "national", "team"])
