@@ -15,7 +15,14 @@ find = finder.Finder(source_filename)
 questions = read_questions(questions_filename)
 
 for question in questions:
-    question_class, keywords = classifier.classify(question)
+    question_class, keywords, frame = classifier.classify(question)
+    answer = ""
     print question
-    print find.search_who(keywords)
+    if question_class == "When":
+        answer = find.search_when(keywords)
+    elif question_class == "Who":
+        answer = find.search_who(keywords)
+    elif question_class == "Where":
+        answer = find.search_where(keywords)
+    print answer + ' ' + ' '.join(frame)
     print '\n'

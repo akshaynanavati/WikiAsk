@@ -38,7 +38,6 @@ class Finder:
         return entities
 
     def get_entities(self, text, kind):
-        #text = self.document.raw()
         sents = nltk.sent_tokenize(text)
         sents = [nltk.word_tokenize(sent) for sent in sents]
         sents = [nltk.pos_tag(sent) for sent in sents]
@@ -46,7 +45,7 @@ class Finder:
         entities = []
         for tree in chunked:
             entities.extend(self.extract_entity_names(tree, kind))
-        return set(entities)
+        return entities
 
     # BM25 Implementation
     def n(self, docs, word):
@@ -131,5 +130,33 @@ class Finder:
             for sent in sents:
                 sent = ' '.join(sent)
                 entities = self.get_entities(sent, "PERSON")
-                return set(entities)
+                if len(entities) > 0:
+                    return entities[0]
+        return None
+
+    def search_when(self, keywords):
+        para_indices = self.rank_paragraphs(keywords)
+        for index in para_indices:
+            para = self.paras[index]
+            sents = self.rank_sentences(para, keywords)
+            for sent in sents:
+                sent = ' '.join(sent)
+                entities = self.get_entities(sent, "DATE")
+                entities.extend(self.get_entities(sent, "TIME"))
+                if len(entities) > 0:
+                    return entities[0]
+        return None
+
+    def search_where(self, keywords):
+        para_indices = self.rank_paragraphs(keywords)
+        for index in para_indices:
+            para = self.paras[index]
+            sents = self.rank_sentences(para, keywords)
+            for sent in sents:
+                sent = ' '.join(sent)
+                entities = self.get_entities(sent, "LOCATION")
+                entities.extend(self.get_entities(sent, "ORGANIZATION"))
+                entities.extend(self.get_entities(sent, "GPE"))
+                if len(entities) > 0:
+                    return entities[0]
         return None

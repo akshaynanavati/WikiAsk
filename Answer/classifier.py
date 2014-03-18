@@ -15,45 +15,45 @@ def get_keywords(tokens, question_class):
 
 def question_classify(tokens):
     if tokens[0] == "when":
-        return "When"
+        return "When", tokens[1:]
     elif tokens[0] == "where":
-        return "Where"
+        return "Where", tokens[1:]
     elif tokens[0] == "why":
-        return "Why"
+        return "Why", None
     elif tokens[0] == "who":
-        return "Who"
+        return "Who", tokens[1:]
     elif False:
-        return "WhoRole"
+        return "WhoRole", None
     elif tokens[0] == "how":
         if tokens[1] == "do" or tokens[1] == "did":
-            return "HowDo"
+            return "HowDo", None
         elif tokens[1] == "far":
-            return "HowFar"
+            return "HowFar", None
         elif tokens[1] == "long":
-            return "HowLong"
+            return "HowLong", None
         elif tokens[1] == "many":
-            return "HowMany"
+            return "HowMany", None
         elif tokens[1] == "much":
-            return "HowMuch"
+            return "HowMuch", None
         elif tokens[1] == "many" and tokens[2] == "times":
-            return "HowManyTimes"
+            return "HowManyTimes", None
         else:
-            return "HowProp"
+            return "HowProp", None
     elif tokens[0] == "what":
         if False:
-            return "WhatEquiv"
+            return "WhatEquiv", None
         elif tokens[1] == "type" or tokens[1] == "kind":
-            return "WhatType"
+            return "WhatType", None
         elif False:
-            return "WhatPrep"
+            return "WhatPrep", None
         elif False:
-            return "WhatRole"
+            return "WhatRole", None
         elif False:
-            return "WhatTime"
+            return "WhatTime", None
         elif False:
-            return "WhatMeas"
-        return "What"
-    return None
+            return "WhatMeas", None
+        return "What", None
+    return None, None
 
 def classify(sentence):
     """
@@ -62,9 +62,9 @@ def classify(sentence):
     """
     tokens = nltk.word_tokenize(sentence)
     tokens = [x.lower() for x in tokens]
-    question_class = question_classify(tokens)
+    question_class, frame = question_classify(tokens)
     keywords = get_keywords(tokens, question_class)
-    return question_class, keywords
+    return question_class, keywords, frame
 
 if __name__ == '__main__':
     print classify("Who am I?")
