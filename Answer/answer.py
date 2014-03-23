@@ -1,6 +1,7 @@
 import classifier
 import finder
 import sys
+import answer_who
 
 def read_questions(questions_filename):
     questions = []
@@ -11,11 +12,18 @@ def read_questions(questions_filename):
 
 source_filename = sys.argv[1]
 questions_filename = sys.argv[2]
+
 f = finder.Finder(source_filename)
 c = classifier.Classifier()
+
 questions = read_questions(questions_filename)
 
 for question in questions:
+    wh_word = c.classify(question)
+    
+    if wh_word == "who":
+        print answer_who.answer(question)
+        
     print c.classify(question)
     continue
     
@@ -30,3 +38,5 @@ for question in questions:
         answer = find.search_where(keywords)
     print answer + ' ' + ' '.join(frame)
     print '\n'
+
+
