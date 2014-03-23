@@ -11,10 +11,14 @@ def read_questions(questions_filename):
 
 source_filename = sys.argv[1]
 questions_filename = sys.argv[2]
-find = finder.Finder(source_filename)
+f = finder.Finder(source_filename)
+c = classifier.Classifier()
 questions = read_questions(questions_filename)
 
 for question in questions:
+    print c.classify(question)
+    continue
+    
     question_class, keywords, frame = classifier.classify(question)
     answer = ""
     print question
