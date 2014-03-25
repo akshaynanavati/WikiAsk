@@ -1,0 +1,23 @@
+This software (MontyLingua3) is a fork of the original MontyLingua
+project http://web.media.mit.edu/~hugo/montylingua/ since that project
+is not under active development.
+
+This copy of MontyLingua was licensed to me (Srinivasan R) under GNU
+GPL for non-commercial, non-proprietary usage and was downloaded from
+http://web.media.mit.edu/~hugo/montylingua. 
+
+Since now I am having a GPLed copy of the software, I have all
+rights to copy, modify and redistribute it under GNU GPL.
+
+This copy of the software now is released purely under GNU GPL and 
+anyone can use this for any purposes (commercial/non-commercial) as
+long as they follow the GNU General Public License as mentioned in
+http://www.gnu.org/licenses/gpl.txt. A copy of the license can be
+found in COPYING.
+
+Please note that the original copy of MontyLingua downloadable from
+http://web.media.mit.edu/~hugo/montylingua/ has restrictions on
+commercial usage which requires a seperate license from the author. 
+
+If you use this project for research, it would be nice to give credit
+to the original author (Hugo Liu) and also the MontyLingua3 project.

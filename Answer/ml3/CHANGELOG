@@ -1,0 +1,49 @@
+version 2.1 (6 Aug 2004):
+  - new MontyNLGenerator component (in Beta phase)
+  - includes version 2.0.1 bugfix for problem
+    where java api wasn't being exposed
+       
+version 2.0 (29 Jul 2004):
+  - 2.5X speed enhancement for whole system
+    2X speed enhancement for tagger component
+  - rule-based chunker replaced with much faster
+    and more accurate regular expression chunker
+  - common sense added to MontyTagger component
+    improves word-level tagger accuracy to 97%
+  - updated and expanded lexicon for English
+  - added a user-customizable lexicon
+    CUSTOMLEXICON.MDF
+  - improvements to MontyLemmatiser incorporating
+    exception cases
+  - html documentation added
+  - speed optimizations to all code
+  - improvements made to semantic extraction
+  - added a morphological analyzer component,
+    MontyMorph
+  - expanded Java API
+  
+version 1.3.1 (11 Nov 2003):
+  - mainly bugfixes
+  - datafiles can now sit in the current working directory (".")
+    or in the path of either of the two environment variables 
+    "MONTYLINGUA" or "PATH" 
+  - presence of the '/' token in input won't crash system
+
+version 1.3 (5 Nov 2003):
+  - lisp-style predicate output added
+  - Sample.java example file added to illustrate API
+
+version 1.2 (12 Sep 2003):
+  - MontyChunker rules expanded
+  - MontyLingua JAVA API added
+  - MontyLingua documentation added
+
+version 1.1 (1 Sep 2003):
+  - MontyTagger optimized, 2X loading and 2.5X tagging speed
+  - MontyLemmatiser added to MontyLingua suite
+  - MontyChunker added
+  - MontyLingua command-line capability added
+
+version 1.0 (3 Aug 2003):
+  - First release
+  - MontyTagger (since 15 Jan 2001) added to MontyLingua

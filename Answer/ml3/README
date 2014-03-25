@@ -1,0 +1,68 @@
+DOCUMENTATION OVERVIEW
+
+  About MontyLingua:
+  - MontyTokenizer
+    - normalizes punctuation, spacing and
+      contractions, with sensitivity to abbrevs.
+  - MontyTagger
+    - Part-of-speech tagging using PENN TREEBANK tagset
+    - enriched with "Common Sense" from the Open Mind
+      Common Sense project
+    - exceeds accuracy of Brill94 tbl tagger
+      using default training files
+  - MontyREChunker
+    - chunks tagged text into verb, noun, and adjective
+      chunks (VX,NX, and AX respectively)
+    - incredible speed and accuracy improvement over
+      previous MontyChunker
+  - MontyExtractor
+    - extracts verb-argument structures, phrases, and
+      other semantically valuable information
+      from sentences and returns sentences as "digests"
+  - MontyLemmatiser
+    - part-of-speech sensitive lemmatisation
+    - strips plurals (geese-->goose) and
+      tense (were-->be, had-->have)
+    - includes regexps from Humphreys and Carroll's
+      morph.lex, and UPENN's XTAG corpus
+  - MontyNLGenerator
+    - generates summaries
+    - generates surface form sentences
+    - determines and numbers NPs and tenses verbs
+    - accounts for sentence_type
+
+ WHERE MUST THE DATAFILES BE?
+ - the "datafiles" include all files ending in *.MDF
+ - the best solution is to create an environment variable called
+   "MONTYLINGUA" and put the path to the datafiles there
+ - alternatively, MontyLingua can find the datafiles if they are 
+   in the operating system "PATH" variable, or in the current
+   working directory
+   
+  API:
+    The MontyLingua Python API is MontyLingua.html
+    The MontyLingua Java API is JMontyLingua.html
+
+  RUNNING:
+    MontyLingua can be called from Python, Java,
+    or run at the command line.
+    
+    A. From Python, import the MontyLingua.py file
+    B. From your Java code:
+      1. make sure "montylingua.jar" is
+        in your class path, in addition to
+        associated subdirectories and data files
+      2. in your code, you need something like:
+
+      import montylingua.JMontyLingua; // loads namespace
+      public class YourClassHere {
+        public static JMontyLingua j = new JMontyLingua();
+        public yourFunction(String raw, String toked) {
+           jisted = j.jist_predicates(raw); // an example function
+
+      3. For a good use case example, see Sample.java.
+    C. From the command line:
+      1. if you have python installed and in your path:
+         type "run.bat"
+      2. if you have java installed and in your path:
+         type "runJavaCommandline.bat"

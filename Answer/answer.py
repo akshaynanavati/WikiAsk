@@ -2,6 +2,7 @@ import classifier
 import finder
 import sys
 import answer_who
+import MontyLingua
 
 def read_questions(questions_filename):
     questions = []
@@ -15,6 +16,7 @@ questions_filename = sys.argv[2]
 
 f = finder.Finder(source_filename)
 c = classifier.Classifier()
+ml = MontyLingua.MontyLingua()
 
 questions = read_questions(questions_filename)
 
@@ -22,9 +24,8 @@ for question in questions:
     wh_word = c.classify(question)
     
     if wh_word == "who":
-        print answer_who.answer(question)
+        answer_who.answer(question, ml, f)
         
-    print c.classify(question)
     continue
     
     question_class, keywords, frame = classifier.classify(question)

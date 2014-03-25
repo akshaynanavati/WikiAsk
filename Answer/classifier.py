@@ -53,11 +53,11 @@ class Classifier:
 
         return wh_word
 
-    def classify(self, quest)
+    def classify(self, quest):
         quest_tree = self.parser.parse(quest)
         tokens = nltk.word_tokenize(quest)
 
-        if sent_tree.node != "SBARQ":
+        if quest_tree.node != "SBARQ":
             print "Warning, root is not a SBARQ (direct question)"
 
         (wh_kind, wh_word) = self.get_wh(quest_tree)

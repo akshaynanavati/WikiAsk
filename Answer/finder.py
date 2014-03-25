@@ -112,14 +112,14 @@ class Finder:
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 
-    def yield_search(self, pos, keywords):
+    def yield_search(self, keywords):
         para_indices = self.rank_paragraphs(keywords)
         for index in para_indices:
             para = self.paras[index]
             sents = self.rank_sentences(para, keywords)
             for sent in sents:
                  yield sent
-        return None
+        return
 
     # Different searches
     def search_who(self, keywords):
