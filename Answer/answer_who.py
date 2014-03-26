@@ -21,7 +21,6 @@ def get_subject(preds, verb, f):
         pred = pred.split('"')[1::2]
         if pred[0] == verb:
             candidates.append(pred[1])
-    print candidates
 
     if len(candidates) == 0:
         return None
@@ -58,7 +57,6 @@ def answer(quest, ml, f):
     # Search
     tokens = nltk.word_tokenize(quest)
     for sent in f.yield_search(tokens):
-        sent = ' '.join(sent)
         preds = ml.jist_predicates(sent)[0]
         answer = get_subject(preds, verb, f)
         if answer:

@@ -1,8 +1,11 @@
 import classifier
 import finder
 import sys
-import answer_who
 import MontyLingua
+
+import answer_who
+import answer_where
+import answer_when
 
 def read_questions(questions_filename):
     questions = []
@@ -24,6 +27,10 @@ for question in questions:
     
     if wh_word == "who":
         answer_who.answer(question, ml, f)
+    elif wh_word == "where":
+        answer_where.answer(question, ml, f)
+    elif wh_word == "when":
+        answer_when.answer(question, ml, f)
         
     continue
     

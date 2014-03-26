@@ -32,17 +32,17 @@ class Finder:
         IMPORTANT: NEED TO WORK ON SPLITTING HEADERS WITH THE REST OF
         THE TEXT. NAMES CAN GET COMBINED IN WEIRD WAYS
         """
-        ner_tagger = NERTagger("stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz",
+        ner_tagger = NERTagger("stanford-ner/classifiers/english.muc.7class.distsim.crf.ser.gz",
                 "stanford-ner/stanford-ner.jar")
-        entities = {"PERSON" : defaultdict(int), 
-                "ORGANIZATION" : defaultdict(int), 
-                "LOCATION" : defaultdict(int)}
+        entities = {}
         text = ''.join(x for x in text if x != '.')
         tags = ner_tagger.tag(text.split())
         # Merge Tags
         for key, group in groupby(tags, lambda x: x[1]):
             if key != 'O':
                 entity = ' '.join(x[0] for x in group)
+                if key not in entities:
+                    entities[key] = defaultdict(int)
                 entities[key][entity] += 1
         return entities
 
@@ -89,13 +89,6 @@ class Finder:
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 
-    def sentence_has_pos(self, pos, sent):
-        sent = ' '.join(sent)
-        sent = nltk.word_tokenize(sent)
-        tags = nltk.pos_tag(sent)
-        tags = [x[1] for x in nltk.pos_tag(sent)]
-        return pos in tags
-
     def rank_sentences(self, sents, keywords):
         """
         This function returns the sentences that best match the keywords
@@ -119,45 +112,5 @@ class Finder:
             para = self.paras[index]
             sents = self.rank_sentences(para, keywords)
             for sent in sents:
-                 yield sent
+                 yield ' '.join(sent)
         return
-
-    # Different searches
-    def search_who(self, keywords):
-        para_indices = self.rank_paragraphs(keywords)
-        for index in para_indices:
-            para = self.paras[index]
-            sents = self.rank_sentences(para, keywords)
-            for sent in sents:
-                sent = ' '.join(sent)
-                entities = self.get_entities(sent, "PERSON")
-                if len(entities) > 0:
-                    return entities[0]
-        return None
-
-    def search_when(self, keywords):
-        para_indices = self.rank_paragraphs(keywords)
-        for index in para_indices:
-            para = self.paras[index]
-            sents = self.rank_sentences(para, keywords)
-            for sent in sents:
-                sent = ' '.join(sent)
-                entities = self.get_entities(sent, "DATE")
-                entities.extend(self.get_entities(sent, "TIME"))
-                if len(entities) > 0:
-                    return entities[0]
-        return None
-
-    def search_where(self, keywords):
-        para_indices = self.rank_paragraphs(keywords)
-        for index in para_indices:
-            para = self.paras[index]
-            sents = self.rank_sentences(para, keywords)
-            for sent in sents:
-                sent = ' '.join(sent)
-                entities = self.get_entities(sent, "LOCATION")
-                entities.extend(self.get_entities(sent, "ORGANIZATION"))
-                entities.extend(self.get_entities(sent, "GPE"))
-                if len(entities) > 0:
-                    return entities[0]
-        return None
