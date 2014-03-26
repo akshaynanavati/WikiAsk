@@ -1,5 +1,6 @@
 import MontyLingua
 import nltk
+from itertools import combinations
 
 def get_verb(preds, subject):
     """
@@ -11,14 +12,31 @@ def get_verb(preds, subject):
             return pred[0]
     return None
 
-def get_subject(preds, verb):
+def get_subject(preds, verb, f):
     """
     This function finds the subject in the tuple where the verb is matched
     """
+    candidates = []
     for pred in preds:
         pred = pred.split('"')[1::2]
         if pred[0] == verb:
-            return pred[1]
+            candidates.append(pred[1])
+    print candidates
+
+    if len(candidates) == 0:
+        return None
+
+    # Process known entities to find the correct / best one
+    known = sorted(f.entities["PERSON"].items(), key = lambda x: x[1],
+            reverse = True)
+    best = []
+    for candidate in candidates:
+        for entity in known:
+            if candidate in entity[0] or entity[0] in candidate:
+                best.append(entity)
+                continue
+    if len(best):
+        return sorted(best, key = lambda x: x[1], reverse = True)[0][0]
     return None
 
 def answer(quest, ml, f):
@@ -42,7 +60,7 @@ def answer(quest, ml, f):
     for sent in f.yield_search(tokens):
         sent = ' '.join(sent)
         preds = ml.jist_predicates(sent)[0]
-        answer = get_subject(preds, verb)
+        answer = get_subject(preds, verb, f)
         if answer:
             print quest, answer
             return answer

@@ -17,7 +17,6 @@ questions_filename = sys.argv[2]
 f = finder.Finder(source_filename)
 c = classifier.Classifier()
 ml = MontyLingua.MontyLingua()
-
 questions = read_questions(questions_filename)
 
 for question in questions:

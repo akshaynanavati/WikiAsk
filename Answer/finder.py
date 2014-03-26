@@ -1,6 +1,9 @@
 import nltk
 from nltk.corpus import PlaintextCorpusReader
+from nltk.tag.stanford import NERTagger
 
+from itertools import groupby
+from collections import defaultdict
 import math
 
 class Finder:
@@ -11,7 +14,7 @@ class Finder:
         self.flatparas = self.parse_paragraphs()
         self.sents = self.document.sents()
         self.words = self.document.words()
-        #self.entities = self.get_entities()
+        self.entities = self.get_entities(self.document.raw())
 
     def parse_paragraphs(self):
         """
@@ -23,29 +26,27 @@ class Finder:
             paras.append([item for sublist in para for item in sublist])
         return paras
 
-    # Entity Construction
-    def extract_entity_names(self, t, kind):
-        # list of kinds: ORGANIZATION, PERSON, LOCATION, DATE, TIME,
-        # PERCENT, MONEY, FACILITY, GPE
-        entities = []
-        if hasattr(t, "node") and t.node:
-            if t.node == kind:
-                entity = ' '.join([child[0] for child in t])
-                entities.append(entity)
-            else:
-                for child in t:
-                    entities.extend(self.extract_entity_names(child, kind))
+    def get_entities(self, text):
+        """
+        This function gets all entities for the article.
+        IMPORTANT: NEED TO WORK ON SPLITTING HEADERS WITH THE REST OF
+        THE TEXT. NAMES CAN GET COMBINED IN WEIRD WAYS
+        """
+        ner_tagger = NERTagger("stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz",
+                "stanford-ner/stanford-ner.jar")
+        entities = {"PERSON" : defaultdict(int), 
+                "ORGANIZATION" : defaultdict(int), 
+                "LOCATION" : defaultdict(int)}
+        text = ''.join(x for x in text if x != '.')
+        tags = ner_tagger.tag(text.split())
+        # Merge Tags
+        for key, group in groupby(tags, lambda x: x[1]):
+            if key != 'O':
+                entity = ' '.join(x[0] for x in group)
+                entities[key][entity] += 1
         return entities
 
-    def get_entities(self, text, kind):
-        sents = nltk.sent_tokenize(text)
-        sents = [nltk.word_tokenize(sent) for sent in sents]
-        sents = [nltk.pos_tag(sent) for sent in sents]
-        chunked = nltk.batch_ne_chunk(sents)
-        entities = []
-        for tree in chunked:
-            entities.extend(self.extract_entity_names(tree, kind))
-        return entities
+                    
 
     # BM25 Implementation
     def n(self, docs, word):
