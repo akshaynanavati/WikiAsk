@@ -6,6 +6,9 @@ from itertools import groupby
 from collections import defaultdict
 import math
 
+import json
+import jsonrpclib
+
 class Finder:
 
     def __init__(self, filename):
@@ -38,6 +41,7 @@ class Finder:
         text = ''.join(x for x in text if x != '.')
         tags = ner_tagger.tag(text.split())
         # Merge Tags
+        all_people = []
         for key, group in groupby(tags, lambda x: x[1]):
             if key != 'O':
                 entity = ' '.join(x[0] for x in group)
@@ -46,7 +50,25 @@ class Finder:
                 entities[key][entity] += 1
         return entities
 
-                    
+    class Word:
+        def __init__(self):
+            self.word = ""
+            self.pos = ""
+            self.ne = ""
+            self.coref = ""
+
+    def parse_document(doc):
+        """
+        This function takes in the document and parses it through the
+        standford corenlp, and then pieces the document back together
+        creating an array of Word objects, which each contain useful
+        information about the word.
+        """
+        server = jsonrpclib.Server("http://localhost:8080")
+        sentence = ""
+        result = json.loads(server.parse(sentence))
+        print result
+        return
 
     # BM25 Implementation
     def n(self, docs, word):

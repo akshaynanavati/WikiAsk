@@ -12,3 +12,5 @@ http://labix.org/python-dateutil
 http://nlp.stanford.edu/software/CRF-NER.shtml
 
 https://gist.github.com/322906/90dea659c04570757cccf0ce1e6d26c9d06f9283
+
+https://pypi.python.org/pypi/corenlp-python/3.2.0-3
