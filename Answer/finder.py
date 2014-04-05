@@ -9,31 +9,46 @@ import math
 import json
 import jsonrpclib
 
+import re
+
 class Finder:
 
-    def __init__(self, filename):
-        self.document = PlaintextCorpusReader("", filename)
-        self.paras = self.document.paras()
-        self.flatparas = self.parse_paragraphs()
-        self.sents = self.document.sents()
-        self.words = self.document.words()
-        self.entities = self.get_entities(self.document.raw())
+    class Paragraph:
+        def __init__(self):
+            self.text = ""
+            self.sents = []
 
-    def parse_paragraphs(self):
-        """
-        This function takes the default result of the paragraph parsing
-        from PlaintextCorpusReader and flattens the list
-        """
-        paras = []
-        for para in self.document.paras():
-            paras.append([item for sublist in para for item in sublist])
-        return paras
+    class Sentence:
+        def __init__(self):
+            self.raw = ""
+            self.words = []
+            self.pos = []
+            self.lemmas = []
+            self.nes = {}
+            self.corefs = {}
+
+    def __init__(self, filename):
+        with open(filename, 'r') as inputfile:
+            self.raw = inputfile.read()
+        paras = self.raw.split('\n\n')
+        self.paras = [x for x in paras if len(x) > 0]
+
+        #from corenlp import StanfordCoreNLP
+        #self.corenlp = StanfordCoreNLP("stanford-corenlp-full-2014-01-04")
+        
+        print len(self.paras)
+        #self.sents = self.parse_document(filename)
+        #self.document = PlaintextCorpusReader("", filename)
+        #self.paras = self.document.paras()
+        #self.sents = self.parse_document()
+        #self.flatparas = self.parse_paragraphs()
+        #self.sents = self.document.sents()
+        #self.words = self.document.words()
+        #self.entities = self.get_entities(self.document.raw())
 
     def get_entities(self, text):
         """
         This function gets all entities for the article.
-        IMPORTANT: NEED TO WORK ON SPLITTING HEADERS WITH THE REST OF
-        THE TEXT. NAMES CAN GET COMBINED IN WEIRD WAYS
         """
         ner_tagger = NERTagger("stanford-ner/classifiers/english.muc.7class.distsim.crf.ser.gz",
                 "stanford-ner/stanford-ner.jar")
@@ -50,25 +65,59 @@ class Finder:
                 entities[key][entity] += 1
         return entities
 
-    class Word:
-        def __init__(self):
-            self.word = ""
-            self.pos = ""
-            self.ne = ""
-            self.coref = ""
-
-    def parse_document(doc):
+    def parse_paragraph(self, para):
         """
         This function takes in the document and parses it through the
-        standford corenlp, and then pieces the document back together
+        standford corenlp, and then pieces the document back together 
         creating an array of Word objects, which each contain useful
-        information about the word.
+        information about the word
         """
         server = jsonrpclib.Server("http://localhost:8080")
-        sentence = ""
-        result = json.loads(server.parse(sentence))
-        print result
-        return
+        #result = json.loads(server.parse(doc))
+        #from corenlp import StanfordCoreNLP
+        #corenlp_dir = "stanford-corenlp-full-2014-01-04"
+        #parsed = server.batch_parse(filename)
+        #corenlp_dir = "Stanford-corenlp-full-2014-01-04"
+        #corenlp = StanfordCoreNLP(corenlp_dir)
+
+        print 1
+        import time
+        time.sleep(2)
+        print 2
+        parse = json.loads(server.parse(para))
+        print 3
+        #parse = self.corenlp.raw_parse(para)
+    
+        p = self.Paragraph()
+        # Parse the sentence structure and information
+        for sent in parse["sentences"]:
+            s = self.Sentence()
+            s.raw = sent["text"]
+            for word in s.words:
+                s.words.append(word[0])
+                s.pos.append(word[1]["PartOfSpeech"])
+                s.lemmas.append(word[1]["Lemma"])
+                tag = word[1]["NamedEntityTag"]
+                if tag != "O":
+                    if tag in s.nes:
+                        s.nes[tag].append(word[0])
+                    else:
+                        s.nes[tag] = [word[0]]
+            p.sents.append(s)
+
+            # If there are any corefs, mark them
+        if "coref" in parse:
+            r = re.compile("[\(\),\[\]\-\s]+")
+            for coref in parse["coref"][0]:
+                first = re.split('"', coref)
+                word_from = first[1]
+                word_to = first[3]
+
+                numbers = re.split("[\(,]+", coref)
+                loc = int(numbers[1]) - 1
+
+                p.sents[loc].corefs[word_from] = word_to
+        return p
 
     # BM25 Implementation
     def n(self, docs, word):
@@ -101,8 +150,8 @@ class Finder:
         order of best to worst
         """
         scores = []
-        for i in xrange(len(self.flatparas)):
-            para = self.flatparas[i]
+        for i in xrange(len(self.paras)):
+            para = self.paras[i]
             score = self.score(para, self.paras, keywords)
             scores.append((i, score))
         
@@ -111,13 +160,14 @@ class Finder:
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 
-    def rank_sentences(self, sents, keywords):
+    def rank_sentences(self, para, keywords):
         """
         This function returns the sentences that best match the keywords
         and contain the part of speech desired. There is a chance that this
         function returns an empty list
         """
         scores = []
+        sents = [x.raw for x in para.sents]
         for sent in sents:
             score = self.score(sent, sents, keywords)
             scores.append((sent, score))
@@ -132,7 +182,10 @@ class Finder:
         para_indices = self.rank_paragraphs(keywords)
         for index in para_indices:
             para = self.paras[index]
-            sents = self.rank_sentences(para, keywords)
+            print para
+            stanford_para = self.parse_paragraph(para)
+            print 1
+            sents = self.rank_sentences(stanford_para, keywords)
             for sent in sents:
-                 yield ' '.join(sent)
+                yield sent
         return

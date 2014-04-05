@@ -57,6 +57,7 @@ def answer(quest, ml, f):
     # Search
     tokens = nltk.word_tokenize(quest)
     for sent in f.yield_search(tokens):
+        return sent
         preds = ml.jist_predicates(sent)[0]
         answer = get_subject(preds, verb, f)
         if answer:
