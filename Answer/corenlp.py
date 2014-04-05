@@ -208,7 +208,6 @@ def parse_parser_results(text):
                     src_i, src_pos, src_l, src_r = int(src_i) - 1, int(src_pos) - 1, int(src_l) - 1, int(src_r) - 1
                     sink_i, sink_pos, sink_l, sink_r = int(sink_i) - 1, int(sink_pos) - 1, int(sink_l) - 1, int(sink_r) - 1
                     coref_set.append(((src_word, src_i, src_pos, src_l, src_r), (sink_word, sink_i, sink_pos, sink_l, sink_r)))
-                    print "HIII"
 
     return results
 
@@ -357,7 +356,8 @@ class StanfordCoreNLP:
             # NER-muc classifier (~60sec)
             # CoNLL classifier (~50sec)
             # PCFG (~3sec)
-            timeouts = [2000, 2000, 6000, 6000, 2000]
+
+            timeouts = [20, 200, 600, 600, 20]
             for i in xrange(5):
                 self.corenlp.expect("done.", timeout=timeouts[i])  # Load model
                 pbar.update(i + 1)
@@ -365,7 +365,8 @@ class StanfordCoreNLP:
             pbar.finish()
 
         # interactive shell
-        self.corenlp.expect("\nNLP> ")
+        self.corenlp.timeout = 600
+        #self.corenlp.expect("\nNLP> ")
         #self.corenlp.expect(pexpect.EOF)
 
     def __init__(self, corenlp_path=DIRECTORY, memory="3g", properties='default.properties', serving=False):

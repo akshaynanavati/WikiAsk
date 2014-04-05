@@ -33,8 +33,10 @@ class Finder:
         paras = self.raw.split('\n\n')
         self.paras = [x for x in paras if len(x) > 0]
 
-        #from corenlp import StanfordCoreNLP
-        #self.corenlp = StanfordCoreNLP("stanford-corenlp-full-2014-01-04")
+        print 1
+        from corenlp import StanfordCoreNLP
+        self.corenlp = StanfordCoreNLP("stanford-corenlp-full-2014-01-04")
+        print 2
         
         print len(self.paras)
         #self.sents = self.parse_document(filename)
@@ -72,7 +74,7 @@ class Finder:
         creating an array of Word objects, which each contain useful
         information about the word
         """
-        server = jsonrpclib.Server("http://localhost:8080")
+        #server = jsonrpclib.Server("http://localhost:8080")
         #result = json.loads(server.parse(doc))
         #from corenlp import StanfordCoreNLP
         #corenlp_dir = "stanford-corenlp-full-2014-01-04"
@@ -80,13 +82,8 @@ class Finder:
         #corenlp_dir = "Stanford-corenlp-full-2014-01-04"
         #corenlp = StanfordCoreNLP(corenlp_dir)
 
-        print 1
-        import time
-        time.sleep(2)
-        print 2
-        parse = json.loads(server.parse(para))
-        print 3
-        #parse = self.corenlp.raw_parse(para)
+        #parse = json.loads(server.parse(para))
+        parse = self.corenlp.raw_parse(para)
     
         p = self.Paragraph()
         # Parse the sentence structure and information
@@ -182,9 +179,7 @@ class Finder:
         para_indices = self.rank_paragraphs(keywords)
         for index in para_indices:
             para = self.paras[index]
-            print para
             stanford_para = self.parse_paragraph(para)
-            print 1
             sents = self.rank_sentences(stanford_para, keywords)
             for sent in sents:
                 yield sent
