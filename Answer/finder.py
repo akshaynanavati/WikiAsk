@@ -10,6 +10,7 @@ import json
 import jsonrpclib
 
 import re
+from corenlp import StanfordCoreNLP
 
 class Finder:
 
@@ -32,13 +33,8 @@ class Finder:
             self.raw = inputfile.read()
         paras = self.raw.split('\n\n')
         self.paras = [x for x in paras if len(x) > 0]
-
-        print 1
-        from corenlp import StanfordCoreNLP
-        self.corenlp = StanfordCoreNLP("stanford-corenlp-full-2014-01-04")
-        print 2
+        #self.corenlp = StanfordCoreNLP()
         
-        print len(self.paras)
         #self.sents = self.parse_document(filename)
         #self.document = PlaintextCorpusReader("", filename)
         #self.paras = self.document.paras()
@@ -46,7 +42,7 @@ class Finder:
         #self.flatparas = self.parse_paragraphs()
         #self.sents = self.document.sents()
         #self.words = self.document.words()
-        #self.entities = self.get_entities(self.document.raw())
+        self.entities = self.get_entities(self.raw)
 
     def get_entities(self, text):
         """
@@ -77,14 +73,23 @@ class Finder:
         #server = jsonrpclib.Server("http://localhost:8080")
         #result = json.loads(server.parse(doc))
         #from corenlp import StanfordCoreNLP
-        #corenlp_dir = "stanford-corenlp-full-2014-01-04"
         #parsed = server.batch_parse(filename)
         #corenlp_dir = "Stanford-corenlp-full-2014-01-04"
         #corenlp = StanfordCoreNLP(corenlp_dir)
 
         #parse = json.loads(server.parse(para))
-        parse = self.corenlp.raw_parse(para)
-    
+        print 1
+        #parse = self.corenlp.raw_parse("Dempsey is cool.")
+
+        #parse = self.corenlp.raw_parse(para)
+        s = StanfordCoreNLP()
+        parse = s.raw_parse(para)
+        print parse
+        parse = s.raw_parse(para)
+
+        print parse
+        print 2
+        
         p = self.Paragraph()
         # Parse the sentence structure and information
         for sent in parse["sentences"]:
@@ -102,7 +107,7 @@ class Finder:
                         s.nes[tag] = [word[0]]
             p.sents.append(s)
 
-            # If there are any corefs, mark them
+        # If there are any corefs, mark them
         if "coref" in parse:
             r = re.compile("[\(\),\[\]\-\s]+")
             for coref in parse["coref"][0]:
@@ -114,6 +119,7 @@ class Finder:
                 loc = int(numbers[1]) - 1
 
                 p.sents[loc].corefs[word_from] = word_to
+        print "here -- ", len(p.sents)
         return p
 
     # BM25 Implementation
@@ -157,16 +163,16 @@ class Finder:
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 
-    def rank_sentences(self, para, keywords):
+    def rank_sentences(self, sents, keywords):
         """
         This function returns the sentences that best match the keywords
         and contain the part of speech desired. There is a chance that this
         function returns an empty list
         """
         scores = []
-        sents = [x.raw for x in para.sents]
+        raw_sents = [x[0] for x in sents]
         for sent in sents:
-            score = self.score(sent, sents, keywords)
+            score = self.score(sent[0], raw_sents, keywords)
             scores.append((sent, score))
 
         # Filter out no matches / no pos match
@@ -175,12 +181,32 @@ class Finder:
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 
-    def yield_search(self, keywords):
+    def yield_search_by_para(self, keywords):
+        """
+        Bad
+        """
         para_indices = self.rank_paragraphs(keywords)
         for index in para_indices:
             para = self.paras[index]
             stanford_para = self.parse_paragraph(para)
-            sents = self.rank_sentences(stanford_para, keywords)
+            #sents = self.rank_sentences(stanford_para, keywords)
             for sent in sents:
                 yield sent
         return
+
+    def yield_search(self, keywords):
+        sents = []
+        for para in self.paras:
+            para_sents = nltk.sent_tokenize(para)
+            for sent in para_sents:
+                sents.append((sent, para))
+
+        sents = self.rank_sentences(sents, keywords)
+        for (sent, para) in sents:
+            parsed_para = self.parse_paragraph(para)
+            print len(parsed_para.sents)
+            for psent in parsed_para.sents:
+                if psent.raw == sent:
+                    print sent
+            print para
+            yield sent 
