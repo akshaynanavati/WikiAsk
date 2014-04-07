@@ -59,6 +59,24 @@ class Finder:
                 entities[key][entity] += 1
         return entities
 
+    def parse_sentence(self, sent):
+        parse = self.corenlp.raw_parse(sent)
+        parse = self.corenlp.raw_parse(sent)
+        s = Sentence()
+        s.raw = sent["text"]
+        s.parsetree = sent["parsetree"]
+        for word in sent["words"]:
+            s.words.append(word[0])
+            s.pos.append(word[1]["PartOfSpeech"])
+            s.lemmas.append(word[1]["Lemma"])
+            tag = word[1]["NamedEntityTag"]
+            if tag != "O":
+                if tag in s.nes:
+                    s.nes[tag].append(word[0])
+                else:
+                    s.nes[tag] = [word[0]]
+        return s
+
     def parse_paragraph(self, para):
         """
         This function takes in the document and parses it through the
@@ -99,7 +117,6 @@ class Finder:
                 loc = int(numbers[1]) - 1
 
                 p.sents[loc].corefs[word_from] = word_to
-        print "here -- ", len(p.sents)
         return p
 
     # BM25 Implementation
