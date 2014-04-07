@@ -202,6 +202,8 @@ def parse_parser_results(text):
                 coref_set = []
                 results['coref'].append(coref_set)
             else:
+                if not coref_set:
+                    coref_set = []
                 coref_set.append(line)
                 continue
                 for src_i, src_pos, src_l, src_r, sink_i, sink_pos, sink_l, sink_r, src_word, sink_word in CR_PATTERN.findall(line):
@@ -449,6 +451,8 @@ class StanfordCoreNLP:
 
         if VERBOSE:
             print "%s\n%s" % ('=' * 40, incoming)
+        return parse_parser_results(incoming)
+        """
         try:
             results = parse_parser_results(incoming)
         except Exception as e:
@@ -456,13 +460,15 @@ class StanfordCoreNLP:
                 print traceback.format_exc()
             raise e
 
-        return results
+        return results"""
 
     def raw_parse(self, text):
         """
         This function takes a text string, sends it to the Stanford parser,
         reads in the result, parses the results and returns a list
         with one dictionary entry for each parsed sentence.
+        """
+        return self._parse(text)
         """
         try:
             r = self._parse(text)
@@ -474,6 +480,7 @@ class StanfordCoreNLP:
             if self.serving:  # We don't want to raise the exception when acting as a server
                 return []
             raise e
+        """
 
     def parse(self, text):
         """

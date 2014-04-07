@@ -1,60 +1,44 @@
-import MontyLingua
 import nltk
-from itertools import combinations
 
-def get_verb(preds, subject):
-    """
-    This function finds the verb in the tuple where the subject is matched
-    """
-    for pred in preds:
-        pred = pred.split('"')[1::2]
-        if pred[1] == subject:
-            return pred[0]
-    return None
-
-def get_subject(preds, verb, f):
-    """
-    This function finds the subject in the tuple where the verb is matched
-    """
-    candidates = []
-    for pred in preds:
-        pred = pred.split('"')[1::2]
-        if pred[0] == verb:
-            candidates.append(pred[1])
-
-    if len(candidates) == 0:
-        return None
-
-    # Process known entities to find the correct / best one
-    known = sorted(f.entities["PERSON"].items(), key = lambda x: x[1],
-            reverse = True)
-    best = []
-    for candidate in candidates:
-        for entity in known:
-            if candidate in entity[0] or entity[0] in candidate:
-                best.append(entity)
-                continue
-    if len(best):
-        return sorted(best, key = lambda x: x[1], reverse = True)[0][0]
-    return None
 
 def get_definition(person, sent):
+    # check that the 'be' belongs to the right person
     if "be" in sent.lemmas:
-        print sent.raw
         split = sent.words[sent.lemmas.index("be")]
-        defin = sent.raw.split(split)[1]
-        return person + " " + split + define
+        defin = sent.raw.split(split)[1:]
+        return person + " " + split + ''.join(defin)
     else:
         print "none", sent.raw
         return None
 
+def get_person(definition, sent):
+    print "IN", definition, sent.depends
+    for depend in sent.depends:
+        if depend[0] == "nsubj" and depend[2] == definition:
+            return depend[1]
+    return None
+
 def get_who(sent, parsed_quest):
+    print sent.raw
+    print parsed_quest.raw
+    print sent.depends
     print parsed_quest.depends
+    print sent.nes
+    print parsed_quest.nes
+    print "SPACE"
+    if "PERSON" not in sent.nes:
+        return None
+    print "YE"
+
     for depend in parsed_quest.depends:
-        if depend[0] == "cop" and depend[1].lower() == "who":
-            return get_definition(depend[2], sent)
-        else:
-            return None
+        if (depend[0] == "nsubj" and depend[1].lower() == "who"):
+            if ("PERSON" in parsed_quest.nes and 
+                depend[2] in parsed_quest.nes["PERSON"] and
+                depend[2] in parsed_quest.nes["PERSON"]):
+                return get_definition(depend[2], sent)
+            else:
+                return get_person(depend[2], sent)
+    return None
 
 def answer(quest, f):
     """

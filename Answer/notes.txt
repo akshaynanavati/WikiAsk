@@ -1,0 +1,1 @@
+WHERE DID NP VP (VP = VBP + NP + PP) => context = VBD + NP (NP = NP + PP) 

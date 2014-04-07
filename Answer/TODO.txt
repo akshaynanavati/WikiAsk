@@ -1,0 +1,5 @@
+refine WHERE to cut dates (maybe?)
+refine WHEN to cut places
+refine YES/NO to support cross-referencing (idea: individual keyword searches)
+develop WHAT - least informative wh
+develop HOW/WHY - most informative wh
