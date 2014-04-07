@@ -6,11 +6,20 @@ from itertools import groupby
 from collections import defaultdict
 import math
 
-import json
-import jsonrpclib
-
 import re
 from corenlp import StanfordCoreNLP
+
+class Sentence:
+    def __init__(self):
+        self.raw = ""
+        self.words = []
+        self.pos = []
+        self.lemmas = []
+        self.nes = {}
+        self.corefs = {}
+
+    def __repr__(self):
+        return "Sentence Object\nRaw: %s\nWords: %s\nPOS: %s\nLemmas: %s\nNEs: %s\nCorefs: %s\n" % (self.raw, str(self.words), str(self.pos), str(self.lemmas), str(self.nes), str(self.corefs))
 
 class Finder:
 
@@ -19,29 +28,12 @@ class Finder:
             self.text = ""
             self.sents = []
 
-    class Sentence:
-        def __init__(self):
-            self.raw = ""
-            self.words = []
-            self.pos = []
-            self.lemmas = []
-            self.nes = {}
-            self.corefs = {}
-
     def __init__(self, filename):
         with open(filename, 'r') as inputfile:
             self.raw = inputfile.read()
         paras = self.raw.split('\n\n')
         self.paras = [x for x in paras if len(x) > 0]
-        #self.corenlp = StanfordCoreNLP()
-        
-        #self.sents = self.parse_document(filename)
-        #self.document = PlaintextCorpusReader("", filename)
-        #self.paras = self.document.paras()
-        #self.sents = self.parse_document()
-        #self.flatparas = self.parse_paragraphs()
-        #self.sents = self.document.sents()
-        #self.words = self.document.words()
+        self.corenlp = StanfordCoreNLP()
         self.entities = self.get_entities(self.raw)
 
     def get_entities(self, text):
@@ -70,32 +62,15 @@ class Finder:
         creating an array of Word objects, which each contain useful
         information about the word
         """
-        #server = jsonrpclib.Server("http://localhost:8080")
-        #result = json.loads(server.parse(doc))
-        #from corenlp import StanfordCoreNLP
-        #parsed = server.batch_parse(filename)
-        #corenlp_dir = "Stanford-corenlp-full-2014-01-04"
-        #corenlp = StanfordCoreNLP(corenlp_dir)
-
-        #parse = json.loads(server.parse(para))
-        print 1
-        #parse = self.corenlp.raw_parse("Dempsey is cool.")
-
-        #parse = self.corenlp.raw_parse(para)
-        s = StanfordCoreNLP()
-        parse = s.raw_parse(para)
-        print parse
-        parse = s.raw_parse(para)
-
-        print parse
-        print 2
-        
+        # Parse twice because .... because
+        parse = self.corenlp.raw_parse(para)
+        parse = self.corenlp.raw_parse(para)
         p = self.Paragraph()
         # Parse the sentence structure and information
         for sent in parse["sentences"]:
-            s = self.Sentence()
+            s = Sentence()
             s.raw = sent["text"]
-            for word in s.words:
+            for word in sent["words"]:
                 s.words.append(word[0])
                 s.pos.append(word[1]["PartOfSpeech"])
                 s.lemmas.append(word[1]["Lemma"])
@@ -203,10 +178,14 @@ class Finder:
 
         sents = self.rank_sentences(sents, keywords)
         for (sent, para) in sents:
+            before_para = para.split(sent)[0]
+            para = before_para + sent
+            
+            # Check sentence length -- above 7 sentences doesn't work
+            sents = nltk.sent_tokenize(para)
+            if len(sents) > 7:
+                para = ' '.join(sents[:-7])
+
             parsed_para = self.parse_paragraph(para)
-            print len(parsed_para.sents)
-            for psent in parsed_para.sents:
-                if psent.raw == sent:
-                    print sent
-            print para
-            yield sent 
+            parsed_sent = parsed_para.sents[-1]
+            yield parsed_sent

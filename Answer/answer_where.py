@@ -8,7 +8,6 @@ def get_location(sent, f):
             return entity[0]
     return None
 
-
 def answer(quest, ml, f):
     # Search
     tokens = nltk.word_tokenize(quest)
