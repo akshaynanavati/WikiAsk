@@ -1,11 +1,11 @@
 import classifier
 import finder
 import sys
-import MontyLingua
 
 import answer_who
 import answer_where
 import answer_when
+import answer_yesno
 
 def read_questions(questions_filename):
     questions = []
@@ -18,32 +18,19 @@ source_filename = sys.argv[1]
 questions_filename = sys.argv[2]
 
 f = finder.Finder(source_filename)
-c = classifier.Classifier()
-ml = MontyLingua.MontyLingua()
+c = classifier.Classifier(f)
 questions = read_questions(questions_filename)
 
 for question in questions:
     wh_word = c.classify(question)
     
     if wh_word == "who":
-        answer_who.answer(question, ml, f)
+        answer_who.answer(question, f)
     elif wh_word == "where":
-        answer_where.answer(question, ml, f)
+        answer_where.answer(question, f)
     elif wh_word == "when":
-        answer_when.answer(question, ml, f)
-        
-    continue
-    
-    question_class, keywords, frame = classifier.classify(question)
-    answer = ""
-    print question
-    if question_class == "When":
-        answer = find.search_when(keywords)
-    elif question_class == "Who":
-        answer = find.search_who(keywords)
-    elif question_class == "Where":
-        answer = find.search_where(keywords)
-    print answer + ' ' + ' '.join(frame)
-    print '\n'
-
-
+        answer_when.answer(question, f)
+    elif wh_word == "yesno":
+        answer_yesno.answer(question, f)
+    else:
+        print "Did not find that question a home."

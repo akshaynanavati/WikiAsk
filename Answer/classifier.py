@@ -1,16 +1,15 @@
-from stat_parser import Parser
 import nltk
 
 class Classifier:
 
-    def __init__(self):
-        self.parser = Parser()
+    def __init__(self, f):
+        self.f = f
 
     def get_wh(self, t):
         if hasattr(t, "node") and t.node:
             if (t.node == "WDT" or t.node == "WP" or t.node == "WP$" or
                 t.node == "WRB"):
-                return (t.node, t[0])
+                return t[0]
             else:
                 for child in t:
                     wh = self.get_wh(child)
@@ -18,13 +17,19 @@ class Classifier:
                         return wh
         return None
 
-    def classify_wh(self, wh_word, tokens):
+    def classify_other(self, quest):
+        if (quest.lemmas[0] == "do" or quest.lemmas[0] == "be" or
+            quest.pos[0] == "MD"):
+            return "yesno"
+        return None 
+
+    def classify_wh(self, wh_word, quest):
+        wh_word = wh_word.lower()
         if (wh_word == "when" or wh_word == "where" or wh_word == "why" or
             wh_word == "who"):
             return wh_word
        
-        tokens = [x.lower() for x in tokens]
-        after = tokens[tokens.index(wh_word) + 1]
+        after = quest.words[1].lower()
         if wh_word == "how":
             if after == "do" or after == "did":
                 return "howdo"
@@ -51,18 +56,15 @@ class Classifier:
             if False:
                 return "whatmeas"
 
-        return wh_word
+        return None
 
     def classify(self, quest):
-        quest_tree = self.parser.parse(quest)
-        tokens = nltk.word_tokenize(quest)
-
-        if quest_tree.node != "SBARQ":
-            print "Warning, root is not a SBARQ (direct question)"
-
-        (wh_kind, wh_word) = self.get_wh(quest_tree)
-        wh_type = self.classify_wh(wh_word, tokens)
-
+        quest = self.f.parse_sentence(quest)
+        wh_word = self.get_wh(quest.parsetree)
+        if wh_word:
+            wh_type = self.classify_wh(wh_word, quest)
+        else:
+            wh_type = self.classify_other(quest)
         return wh_type
 
 

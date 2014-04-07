@@ -38,28 +38,37 @@ def get_subject(preds, verb, f):
         return sorted(best, key = lambda x: x[1], reverse = True)[0][0]
     return None
 
-def answer(quest, ml, f):
+def get_definition(person, sent):
+    if "be" in sent.lemmas:
+        print sent.raw
+        split = sent.words[sent.lemmas.index("be")]
+        defin = sent.raw.split(split)[1]
+        return person + " " + split + define
+    else:
+        print "none", sent.raw
+        return None
+
+def get_who(sent, parsed_quest):
+    print parsed_quest.depends
+    for depend in parsed_quest.depends:
+        if depend[0] == "cop" and depend[1].lower() == "who":
+            return get_definition(depend[2], sent)
+        else:
+            return None
+
+def answer(quest, f):
     """
     This function is used to answer the who question, given the question
     as a complete sentence, the montylingua object, and the finder object
     """
     # Find the verb attached to 'who'
-    preds = ml.jist_predicates(quest)[0]
-    verb = get_verb(preds, "who")
-    if not verb:
-        verb = get_verb(preds, "Who")
-    if not verb:
-        verb = get_verb(preds, "")
-    if not verb:
-        print "Failed to find verb that corresponds to 'who'"
-        return None
+    #preds = ml.jist_predicates(quest)[0]
 
     # Search
     tokens = nltk.word_tokenize(quest)
     for sent in f.yield_search(tokens):
-        return sent
-        preds = ml.jist_predicates(sent)[0]
-        answer = get_subject(preds, verb, f)
+        parsed_quest = f.parse_sentence(quest)
+        answer = get_who(sent, parsed_quest)
         if answer:
             print quest, answer
             return answer

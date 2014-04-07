@@ -1,5 +1,4 @@
 import nltk
-from nltk.corpus import PlaintextCorpusReader
 from nltk.tag.stanford import NERTagger
 
 from itertools import groupby
@@ -18,12 +17,13 @@ class Sentence:
         self.nes = {}
         self.corefs = {}
         self.parsetree = None
+        self.depends = []
 
     def __repr__(self):
-        return ("Sentence Object\nRaw: %s\nWords: %s\nPOS: %s\nLemmas: %s\nNEs: %s\nCorefs: %s\nTree: %s\n"
+        return ("Sentence Object\nRaw: %s\nWords: %s\nPOS: %s\nLemmas: %s\nNEs: %s\nCorefs: %s\nTree: %s\nDepends: %s\n"
                 % (self.raw, str(self.words), str(self.pos), 
                 str(self.lemmas), str(self.nes), str(self.corefs),
-                self.parsetree))
+                self.parsetree, str(self.depends)))
 
 class Finder:
 
@@ -60,12 +60,15 @@ class Finder:
         return entities
 
     def parse_sentence(self, sent):
-        parse = self.corenlp.raw_parse(sent)
-        parse = self.corenlp.raw_parse(sent)
+        parse = {"sentences" : []}
+        while not parse["sentences"]:
+            print 1
+            parse = self.corenlp.raw_parse(sent)
         sent = parse["sentences"][0]
         s = Sentence()
         s.raw = sent["text"]
         s.parsetree = nltk.Tree(sent["parsetree"])
+        s.depends = sent["dependencies"]
         for word in sent["words"]:
             s.words.append(word[0])
             s.pos.append(word[1]["PartOfSpeech"])
@@ -86,14 +89,16 @@ class Finder:
         information about the word
         """
         # Parse twice because .... because
-        parse = self.corenlp.raw_parse(para)
-        parse = self.corenlp.raw_parse(para)
+        parse = {"sentences" : []}
+        while not parse["sentences"]:
+            parse = self.corenlp.raw_parse(para)
         p = self.Paragraph()
         # Parse the sentence structure and information
         for sent in parse["sentences"]:
             s = Sentence()
             s.raw = sent["text"]
             s.parsetree = nltk.Tree(sent["parsetree"])
+            s.depends = sent["dependencies"]
             for word in sent["words"]:
                 s.words.append(word[0])
                 s.pos.append(word[1]["PartOfSpeech"])
@@ -206,8 +211,8 @@ class Finder:
             
             # Check sentence length -- above 7 sentences doesn't work
             sents = nltk.sent_tokenize(para)
-            if len(sents) > 7:
-                para = ' '.join(sents[:-7])
+            if len(sents) > 5:
+                para = ' '.join(sents[:-5])
 
             parsed_para = self.parse_paragraph(para)
             parsed_sent = parsed_para.sents[-1]
