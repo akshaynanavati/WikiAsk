@@ -20,10 +20,10 @@ class Sentence:
         self.parsetree = None
 
     def __repr__(self):
-        return "Sentence Object\nRaw: %s\nWords: %s\nPOS: %s\nLemmas: %s\nNEs: %s\nCorefs: %s\nTree: %s\n"
+        return ("Sentence Object\nRaw: %s\nWords: %s\nPOS: %s\nLemmas: %s\nNEs: %s\nCorefs: %s\nTree: %s\n"
                 % (self.raw, str(self.words), str(self.pos), 
                 str(self.lemmas), str(self.nes), str(self.corefs),
-                self.parsetree)
+                self.parsetree))
 
 class Finder:
 
@@ -62,9 +62,10 @@ class Finder:
     def parse_sentence(self, sent):
         parse = self.corenlp.raw_parse(sent)
         parse = self.corenlp.raw_parse(sent)
+        sent = parse["sentences"][0]
         s = Sentence()
         s.raw = sent["text"]
-        s.parsetree = sent["parsetree"]
+        s.parsetree = nltk.Tree(sent["parsetree"])
         for word in sent["words"]:
             s.words.append(word[0])
             s.pos.append(word[1]["PartOfSpeech"])
@@ -92,7 +93,7 @@ class Finder:
         for sent in parse["sentences"]:
             s = Sentence()
             s.raw = sent["text"]
-            s.parsetree = sent["parsetree"]
+            s.parsetree = nltk.Tree(sent["parsetree"])
             for word in sent["words"]:
                 s.words.append(word[0])
                 s.pos.append(word[1]["PartOfSpeech"])
