@@ -39,6 +39,10 @@ for question in questions:
     elif (wh_word == "howmany" or wh_word == "howlong" or 
         wh_word == "howdo" or wh_word == "howmuch" or wh_word == "howfar"):
         answer = answer_how.answer(question, f, wh_word)
+    elif wh_word == "why":
+        answer = answer_why.answer(question, f)
+    elif wh_word == "what":
+        answer = answer_what.answer(question, f)
 
     if answer:
         print answer

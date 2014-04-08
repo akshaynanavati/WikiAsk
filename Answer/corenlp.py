@@ -202,8 +202,8 @@ def parse_parser_results(text):
                 coref_set = []
                 results['coref'].append(coref_set)
             else:
-                if not coref_set:
-                    coref_set = []
+                #if not coref_set:
+                #    coref_set = []
                 coref_set.append(line)
                 continue
                 for src_i, src_pos, src_l, src_r, sink_i, sink_pos, sink_l, sink_r, src_word, sink_word in CR_PATTERN.findall(line):
@@ -422,7 +422,7 @@ class StanfordCoreNLP:
         # the idea here is that you increase the timeout as a
         # function of the text's length.
         # max_expected_time = max(5.0, 3 + len(to_send) / 5.0)
-        max_expected_time = max(20.0, len(to_send) / 3.0)
+        max_expected_time = max(30.0, len(to_send) / 3.0)
 
         # repeated_input = self.corenlp.except("\n")  # confirm it
         t = self.corenlp.expect(["\nNLP> ", pexpect.TIMEOUT, pexpect.EOF,
