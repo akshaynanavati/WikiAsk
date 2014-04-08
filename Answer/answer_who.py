@@ -76,6 +76,8 @@ def answer(quest, f):
     tokens = nltk.word_tokenize(quest)
     for sent in f.yield_search(tokens):
         parsed_quest = f.parse_sentence(quest)
+        if not parsed_quest:
+            return None
         answer = get_who(sent, parsed_quest)
         if answer:
             return answer

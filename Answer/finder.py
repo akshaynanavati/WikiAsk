@@ -8,6 +8,11 @@ import math
 import re
 from corenlp import StanfordCoreNLP
 
+import errno
+import signal
+import os
+from functools import wraps
+
 class Sentence:
     def __init__(self):
         self.raw = ""
@@ -24,6 +29,27 @@ class Sentence:
                 % (self.raw, str(self.words), str(self.pos), 
                 str(self.lemmas), str(self.nes), str(self.corefs),
                 self.parsetree, str(self.depends)))
+
+class TimeoutError(Exception):
+    pass
+
+def timeout(seconds, error_message=os.strerror(errno.ETIME)):
+    def decorator(func):
+        def _handle_timeout(signum, frame):
+            raise TimeoutError(error_message)
+
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _handle_timeout)
+            signal.alarm(seconds)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+
+        return wraps(func)(wrapper)
+
+    return decorator
 
 class Finder:
 
@@ -58,19 +84,31 @@ class Finder:
                     entities[key] = defaultdict(int)
                 entities[key][entity] += 1
         return entities
+    
+    @timeout(10)
+    def _parse(self, text):
+        return self.corenlp.raw_parse(text)
 
     def get_parse(self, text):
+        tries = 0
         parse = {"sentences" : []}
         while not parse["sentences"]:
+            if tries > 10:
+                return None
+            if tries > 5:
+                # reset Stanford
+                self.corenlp = StanfordCoreNLP()
             try:
-                print 1
-                parse = self.corenlp.raw_parse(text)
+                parse = self._parse(text)
             except Exception as error:
+                tries += 1
                 continue
         return parse
 
     def parse_sentence(self, sent):
         parse = self.get_parse(sent)
+        if not parse:
+            return None
         sent = parse["sentences"][0]
         s = Sentence()
         s.raw = sent["text"]
@@ -97,6 +135,8 @@ class Finder:
         """
         # Parse twice because .... because
         parse = self.get_parse(para)
+        if not parse:
+            return None
         p = self.Paragraph()
         # Parse the sentence structure and information
         for sent in parse["sentences"]:
@@ -121,13 +161,12 @@ class Finder:
             r = re.compile("[\(\),\[\]\-\s]+")
             for coref in parse["coref"][0]:
                 first = re.split('"', coref)
-                word_from = first[1]
-                word_to = first[3]
-
-                numbers = re.split("[\(,]+", coref)
-                loc = int(numbers[1]) - 1
-
-                p.sents[loc].corefs[word_from] = word_to
+                if len(first) > 3:
+                    word_from = first[1]
+                    word_to = first[3]
+                    numbers = re.split("[\(,]+", coref)
+                    loc = int(numbers[1]) - 1
+                    p.sents[loc].corefs[word_from] = word_to
         return p
 
     # BM25 Implementation
@@ -217,8 +256,10 @@ class Finder:
             # Check sentence length -- above 7 sentences doesn't work
             sents = nltk.sent_tokenize(para)
             if len(sents) > 5:
-                para = ' '.join(sents[:-5])
+                para = ' '.join(sents[-5:])
 
             parsed_para = self.parse_paragraph(para)
+            if not parsed_para:
+                continue
             parsed_sent = parsed_para.sents[-1]
             yield parsed_sent
