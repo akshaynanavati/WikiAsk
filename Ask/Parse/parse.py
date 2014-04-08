@@ -1,16 +1,16 @@
-# parse.py
-# author: Akshay Nanavati
-#
-# implements a basic parser for wiki articles.
-# right now all it does is returun a line by line list of the file
-# contents (where each line is a space seperated list of strings. 
-# we probably will want a better parser later
+import subprocess, socket, nltk, sys
 
-import subprocess, socket, nltk
+sys.path.append("../Lib")
+
+import lib
 
 def parse_sentence(sentence):
+    """
+    given a textual sentence, returns a parse tree for it
+    in string format.
+    """
     host = socket.gethostname()
-    port = 5557
+    port = lib.PORT
     s = socket.socket()
     s.connect((host, port))
     s.send(sentence + "\n")
