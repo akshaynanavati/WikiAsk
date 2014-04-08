@@ -30,6 +30,8 @@ def get_yesno(sent, parsed_quest):
 def answer(quest, f):
     tokens = nltk.word_tokenize(quest)
     parsed_quest = f.parse_sentence(quest)
+    if not parsed_quest:
+        return None
     for sent in f.yield_search(tokens):
         answer = get_yesno(sent, parsed_quest)
         if answer:

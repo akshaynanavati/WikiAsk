@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import classifier
 import finder
 import sys

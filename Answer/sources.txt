@@ -15,3 +15,5 @@ https://gist.github.com/322906/90dea659c04570757cccf0ce1e6d26c9d06f9283
 
 https://pypi.python.org/pypi/corenlp-python/3.2.0-3
 http://nlp.stanford.edu/software/dependencies_manual.pdf
+
+http://stackoverflow.com/questions/2281850/timeout-function-if-it-takes-too-long-to-finish

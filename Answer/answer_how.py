@@ -38,6 +38,8 @@ def answer(quest, f, kind):
         print '\n'
         continue
         parsed_quest = f.parse_sentence(quest)
+        if not parsed_quest:
+            return None
         if kind == "howdo":
             answer = answer_do(sent, parsed_quest)
         elif kind == "howfar":

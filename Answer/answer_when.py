@@ -46,6 +46,8 @@ def get_when(sent, quest_tree):
 def answer(quest, f):
     tokens = nltk.word_tokenize(quest)
     parsed_quest = f.parse_sentence(quest)
+    if not parsed_quest:
+        return None
     for sent in f.yield_search(tokens):
         answer = get_when(sent, parsed_quest.parsetree)
         if answer:
