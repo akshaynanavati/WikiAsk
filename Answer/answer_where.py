@@ -49,7 +49,6 @@ def answer(quest, f):
     for sent in f.yield_search(tokens):
         answer = get_location(sent, parsed_quest.parsetree)
         if answer:
-            print quest, answer
             return answer
     return None
 

@@ -28,10 +28,11 @@ class Classifier:
         if (wh_word == "when" or wh_word == "where" or wh_word == "why" or
             wh_word == "who"):
             return wh_word
-       
-        after = quest.words[1].lower()
+     
+        after_index = [x.lower() for x in quest.words].index(wh_word) + 1
+        after = quest.lemmas[after_index]
         if wh_word == "how":
-            if after == "do" or after == "did":
+            if after == "do":
                 return "howdo"
             if after == "far":
                 return "howfar"

@@ -1,43 +1,67 @@
 import nltk
 
+def sublist_exists(sub, large):
+    for item in sub:
+        if item not in large:
+            return False
+    return True
 
-def get_definition(person, sent):
-    # check that the 'be' belongs to the right person
-    if "be" in sent.lemmas:
-        split = sent.words[sent.lemmas.index("be")]
-        defin = sent.raw.split(split)[1:]
-        return person + " " + split + ''.join(defin)
-    else:
-        print "none", sent.raw
-        return None
+def search_tree(tree, person, verb):
+    if hasattr(tree, "node") and tree.node:
+        for child in tree:
+            result = search_tree(child, person, verb)
+            if result:
+                return result
+        if sublist_exists(person, tree.leaves()) and verb in tree.leaves():
+            return ' '.join(tree.leaves())
+    return None
 
-def get_person(definition, sent):
-    print "IN", definition, sent.depends
+def get_definition(person, verb, sent):
+    # need to check corefs
+    # check for verb fail
+    # check multiple names part
+    if "PERSON" in sent.nes and person[0] in sent.nes["PERSON"]:
+        if verb in sent.lemmas:
+            verb = sent.lemmas.index(verb)
+            verb = sent.words[verb]
+            return search_tree(sent.parsetree, person, verb)          
+    return None
+
+def search_np(tree, name):
+    if hasattr(tree, "node") and tree.node:
+        if (tree.node in ["NP", "NN", "NNS", "NNP", "NNPS"] and
+            name in tree.leaves()):
+            return ' '.join(tree.leaves())
+        for child in tree:
+            search_np(tree, name)
+    return None
+
+def get_person(action, sent):
     for depend in sent.depends:
-        if depend[0] == "nsubj" and depend[2] == definition:
-            return depend[1]
+        if depend[0] == "nsubj":
+            sent_action = depend[2]
+            if sent.lemmas[sent.words.index(sent_action)] == action:
+                name = depend[1]
+                return search_np(sent.parsetree, name)
     return None
 
 def get_who(sent, parsed_quest):
-    print sent.raw
-    print parsed_quest.raw
-    print sent.depends
-    print parsed_quest.depends
-    print sent.nes
-    print parsed_quest.nes
-    print "SPACE"
-    if "PERSON" not in sent.nes:
-        return None
-    print "YE"
-
     for depend in parsed_quest.depends:
-        if (depend[0] == "nsubj" and depend[1].lower() == "who"):
-            if ("PERSON" in parsed_quest.nes and 
-                depend[2] in parsed_quest.nes["PERSON"] and
-                depend[2] in parsed_quest.nes["PERSON"]):
-                return get_definition(depend[2], sent)
-            else:
-                return get_person(depend[2], sent)
+        if depend[0] == "nsubj" and depend[1].lower() == "who":
+            name = [depend[2]]
+            for d in parsed_quest.depends:
+                if d[0] == "nn" and d[1] == name:
+                    name.append(d[2])
+            for d in parsed_quest.depends:
+                if d[0] == "cop" and d[1].lower() == "who":
+                    verb = parsed_quest.words.index(d[2])
+                    verb = parsed_quest.lemmas[verb]
+                    return get_definition(name, verb, sent)
+                    
+        elif depend[0] == "nsubj" and depend[2].lower() == "who":
+            action = parsed_quest.words.index(depend[1])
+            action = parsed_quest.lemmas[action]
+            return get_person(action, sent)
     return None
 
 def answer(quest, f):
@@ -54,6 +78,5 @@ def answer(quest, f):
         parsed_quest = f.parse_sentence(quest)
         answer = get_who(sent, parsed_quest)
         if answer:
-            print quest, answer
             return answer
     return None

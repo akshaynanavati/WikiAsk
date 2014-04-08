@@ -6,6 +6,9 @@ import answer_who
 import answer_where
 import answer_when
 import answer_yesno
+import answer_how
+import answer_why
+import answer_what
 
 def read_questions(questions_filename):
     questions = []
@@ -24,13 +27,20 @@ questions = read_questions(questions_filename)
 for question in questions:
     wh_word = c.classify(question)
     
+    answer = None
     if wh_word == "who":
-        answer_who.answer(question, f)
+        answer = answer_who.answer(question, f)
     elif wh_word == "where":
-        answer_where.answer(question, f)
+        answer = answer_where.answer(question, f)
     elif wh_word == "when":
-        answer_when.answer(question, f)
+        answer = answer_when.answer(question, f)
     elif wh_word == "yesno":
-        answer_yesno.answer(question, f)
+        answer = answer_yesno.answer(question, f)
+    elif (wh_word == "howmany" or wh_word == "howlong" or 
+        wh_word == "howdo" or wh_word == "howmuch" or wh_word == "howfar"):
+        answer = answer_how.answer(question, f, wh_word)
+
+    if answer:
+        print answer
     else:
         print "Did not find that question a home."

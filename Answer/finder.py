@@ -59,11 +59,18 @@ class Finder:
                 entities[key][entity] += 1
         return entities
 
-    def parse_sentence(self, sent):
+    def get_parse(self, text):
         parse = {"sentences" : []}
         while not parse["sentences"]:
-            print 1
-            parse = self.corenlp.raw_parse(sent)
+            try:
+                print 1
+                parse = self.corenlp.raw_parse(text)
+            except Exception as error:
+                continue
+        return parse
+
+    def parse_sentence(self, sent):
+        parse = self.get_parse(sent)
         sent = parse["sentences"][0]
         s = Sentence()
         s.raw = sent["text"]
@@ -89,9 +96,7 @@ class Finder:
         information about the word
         """
         # Parse twice because .... because
-        parse = {"sentences" : []}
-        while not parse["sentences"]:
-            parse = self.corenlp.raw_parse(para)
+        parse = self.get_parse(para)
         p = self.Paragraph()
         # Parse the sentence structure and information
         for sent in parse["sentences"]:
