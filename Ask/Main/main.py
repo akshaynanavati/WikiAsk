@@ -1,39 +1,57 @@
-# main.py
-# author: Akshay Nanavati
-# 
-# the top level entrypoint for the ask program
-
 import sys, os, string, subprocess, nltk
 
 sys.path.append("../Parse")
 sys.path.append("../Generate")
+sys.path.append("../Lib")
 
 import parse
 import easy1
-import easy2
+import which
+import who
 import generate
+import lib
 
 #print "starting parse server..."
 #subprocess.call("./runStanfordParserServer.sh", shell=True)
 #print "started"
 
-# add other generation functions to this list
-generate.register_generation([
-    easy1.generate
-    ])
+def main():
+    # add other generation functions to this list
+    generate.register_generation({
+        "basic" : easy1.generate,
+        "who" : who.generate,
+        "whose" : who.generate_plural,
+        "which" : which.generate
+        })
 
-fname = sys.argv[1]
-nquestions = int(sys.argv[2])
+    fname = sys.argv[1]
+    nquestions = int(sys.argv[2])
 
-f = open(fname)
-article = f.readline()
-f.close()
+    article = ""
+    pars = 0
 
-parsed = parse.parse(article)
-for p in parsed:
-    print p
-    print "\n-----\n"
+    f = open(fname)
+    while pars <= 4: # take only first 4 paragraphs
+        line = f.readline()
+        if len(line) > 80:
+            article += line
+            pars += 1
+    f.close()
 
-for q in generate.generate(parsed, nquestions)[0]:
-    print q
-    print "\n-----\n"
+    parsed = parse.parse(article)
+    for p in parsed:
+        lib.pretty_print(p)
+
+    qs = generate.generate(parsed, nquestions)
+    for q in qs:
+        lib.pretty_print(q)
+
+    while len(qs) < nquestions:
+        qs += "could not generate question".split(" ")
+
+    qs = qs[:nquestions + 1]
+
+    questions = map (lambda l: string.join(l, " "), qs)
+    for q in questions:
+        print q
+
