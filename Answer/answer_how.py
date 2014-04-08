@@ -1,5 +1,11 @@
 import nltk
 
+def answer_long(sent, parsed_quest):
+    # use timex built into corenlp
+    if "DURATION" in sent.nes:
+        return sent.nes["DURATION"][0]        
+    return None
+
 def answer_many(sent, parsed_quest):
     if "NUMBER" in sent.nes:
         for depend in sent.depends:
@@ -14,6 +20,15 @@ def answer_many(sent, parsed_quest):
                 return sent.words[ind]
     return None
 
+def answer_do(sent, parsed_quest):
+    return None
+
+def answer_for(sent, parsed_quest):
+    return None
+
+def answer_much(sent, parsed_quest):
+    return None
+
 def answer(quest, f, kind):
     tokens = nltk.word_tokenize(quest)
     print "token", tokens
@@ -24,15 +39,15 @@ def answer(quest, f, kind):
         continue
         parsed_quest = f.parse_sentence(quest)
         if kind == "howdo":
-            continue    
+            answer = answer_do(sent, parsed_quest)
         elif kind == "howfar":
-            continue
+            answer = answer_far(sent, parsed_quest)
         elif kind == "howlong":
-            continue
+            answer = answer_long(sent, parsed_quest)
         elif kind == "howmany":
             answer = answer_many(sent, parsed_quest)
         elif kind == "howmuch":
-            continue 
+            answer = answer_much(sent, parsed_quest)
         if answer:
             return answer
     return None
