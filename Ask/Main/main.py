@@ -1,9 +1,5 @@
 import sys, os, string, subprocess, nltk
 
-sys.path.append("../Parse")
-sys.path.append("../Generate")
-sys.path.append("../Lib")
-
 import parse
 import easy1
 import which
@@ -49,7 +45,7 @@ def main():
     while len(qs) < nquestions:
         qs += "could not generate question".split(" ")
 
-    qs = qs[:nquestions + 1]
+    qs = qs[:nquestions]
 
     questions = map (lambda l: string.join(l, " "), qs)
     for q in questions:
