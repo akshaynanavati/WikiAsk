@@ -28,6 +28,8 @@ questions = read_questions(questions_filename)
 
 for question in questions:
     wh_word = c.classify(question)
+    if not wh_word:
+        print "Failed to parse."
     
     answer = None
     if wh_word == "who":

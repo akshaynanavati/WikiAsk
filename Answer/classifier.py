@@ -61,6 +61,8 @@ class Classifier:
 
     def classify(self, quest):
         quest = self.f.parse_sentence(quest)
+        if not quest:
+            return None
         wh_word = self.get_wh(quest.parsetree)
         if wh_word:
             wh_type = self.classify_wh(wh_word, quest)

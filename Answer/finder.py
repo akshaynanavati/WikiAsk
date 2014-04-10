@@ -4,9 +4,10 @@ from nltk.tag.stanford import NERTagger
 from itertools import groupby
 from collections import defaultdict
 import math
+import copy
 
 import re
-from corenlp import StanfordCoreNLP
+from corenlp import StanfordCoreNLP, batch_parse
 
 import errno
 import signal
@@ -89,24 +90,66 @@ class Finder:
     def _parse(self, text):
         return self.corenlp.raw_parse(text)
 
+    def is_ascii(self, text):
+        try:
+            text.encode("ascii")
+        except:
+            return False
+        return True
+
+    def lists_without(self, list1, missing):
+        if missing == 0:
+            return [list1]
+        lists = []
+        for i in xrange(len(list1)):
+            here = list1[:i] + list1[i + 1:]
+            lists.extend(self.lists_without(here, missing - 1))
+        return lists
+
+    def compare_str(self, str1, str2):
+        # This function compares the str1 with the possibly unicode
+        # containing str2. It removes all unicode words from str2 and then
+        # compares the two strings.
+        text2 = []
+        missing = 0
+        for word in str2.split():
+            if self.is_ascii(word):
+                text2.append(word)
+            else:
+                missing += 1
+        text2 = ' '.join(text2) 
+        text1 = str1.split()
+        for sublist in self.lists_without(text1, missing):
+            sub = ' '.join(sublist)
+            if sub in text2:
+                return True
+        return False
+
     def get_parse(self, text):
         tries = 0
         parse = {"sentences" : []}
         while not parse["sentences"]:
-            if tries > 10:
+            tries += 1
+            if tries > 15:
+                # not happenin', give up
                 return None
-            if tries > 5:
+            if tries > 8:
                 # reset Stanford
                 self.corenlp = StanfordCoreNLP()
             try:
                 parse = self._parse(text)
             except Exception as error:
-                tries += 1
                 continue
-        return parse
+            # Assert it is this correct parsing
+            for sent in parse["sentences"]:
+                if self.compare_str(sent["text"], text):
+                    return parse
+            parse = {"sentences" : []}
+            continue
+        return None
 
-    def parse_sentence(self, sent):
-        parse = self.get_parse(sent)
+    def parse_sentence(self, text):
+        parse = self.get_parse(text)
         if not parse:
             return None
         sent = parse["sentences"][0]
