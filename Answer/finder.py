@@ -2,9 +2,7 @@ import nltk
 from nltk.tag.stanford import NERTagger
 
 from itertools import groupby
-from collections import defaultdict
 import math
-import copy
 
 import re
 from corenlp import StanfordCoreNLP, batch_parse
@@ -14,22 +12,50 @@ import signal
 import os
 from functools import wraps
 
+import os
+import sys
+
+class Word:
+    def __init__(self):
+        self.raw = ""
+        self.lemma = ""
+        self.pos = ""
+        self.ner = ""
+
+    def __repr__(self):
+        return "%s - %s - %s - %s" % (self.raw, self.lemma, self.pos, 
+                self.ner)
+
 class Sentence:
     def __init__(self):
         self.raw = ""
         self.words = []
-        self.pos = []
-        self.lemmas = []
-        self.nes = {}
         self.corefs = {}
         self.parsetree = None
         self.depends = []
+        self.nes = {}
 
-    def __repr__(self):
-        return ("Sentence Object\nRaw: %s\nWords: %s\nPOS: %s\nLemmas: %s\nNEs: %s\nCorefs: %s\nTree: %s\nDepends: %s\n"
-                % (self.raw, str(self.words), str(self.pos), 
-                str(self.lemmas), str(self.nes), str(self.corefs),
-                self.parsetree, str(self.depends)))
+    def get_searchable(self):
+        coref_str = ' '.join(self.corefs.values())
+        return self.raw + " " + coref_str
+
+    def get_lemma(self, w):
+        for word in self.words:
+            if word.raw == w:
+                return word.lemma
+        return None
+
+    def get_word(self, l):
+        for word in self.words:
+            if word.lemma == l:
+                return word.raw
+        return None
+
+    def has_lemma(self, lemma):
+        for word in self.words:
+            if word.lemma == lemma:
+                return True
+        return False
 
 class TimeoutError(Exception):
     pass
@@ -59,13 +85,16 @@ class Finder:
             self.text = ""
             self.sents = []
 
-    def __init__(self, filename):
-        with open(filename, 'r') as inputfile:
-            self.raw = inputfile.read()
-        paras = self.raw.split('\n\n')
-        self.paras = [x for x in paras if len(x) > 0]
+    def __init__(self, filedir):
+        #with open(filename, 'r') as inputfile:
+        #    self.raw = inputfile.read()
+        #paras = self.raw.split('\n\n')
+        #self.paras = [x for x in paras if len(x) > 0]
+        self.filedir = filedir
         self.corenlp = StanfordCoreNLP()
-        self.entities = self.get_entities(self.raw)
+        self.batchcorenlp = batch_parse(filedir)
+        self.sents = self.parse_document()
+        #self.entities = self.get_entities(self.raw)
 
     def get_entities(self, text):
         """
@@ -157,60 +186,69 @@ class Finder:
         s.raw = sent["text"]
         s.parsetree = nltk.Tree(sent["parsetree"])
         s.depends = sent["dependencies"]
-        for word in sent["words"]:
-            s.words.append(word[0])
-            s.pos.append(word[1]["PartOfSpeech"])
-            s.lemmas.append(word[1]["Lemma"])
-            tag = word[1]["NamedEntityTag"]
-            if tag != "O":
-                if tag in s.nes:
-                    s.nes[tag].append(word[0])
+        for w in sent["words"]:
+            word = Word()
+            word.raw = w[0]
+            word.lemma = w[1]["Lemma"]
+            word.pos = w[1]["PartOfSpeech"]
+            word.ner = w[1]["NamedEntityTag"]
+            if word.ner != "O":
+                if word.ner in s.nes:
+                    s.nes[word.ner].append(word.raw)
                 else:
-                    s.nes[tag] = [word[0]]
+                    s.nes[word.ner] = [word.raw]
+            s.words.append(word)
         return s
 
-    def parse_paragraph(self, para):
-        """
-        This function takes in the document and parses it through the
-        standford corenlp, and then pieces the document back together 
-        creating an array of Word objects, which each contain useful
-        information about the word
-        """
-        # Parse twice because .... because
-        parse = self.get_parse(para)
-        if not parse:
-            return None
-        p = self.Paragraph()
-        # Parse the sentence structure and information
-        for sent in parse["sentences"]:
-            s = Sentence()
-            s.raw = sent["text"]
-            s.parsetree = nltk.Tree(sent["parsetree"])
-            s.depends = sent["dependencies"]
-            for word in sent["words"]:
-                s.words.append(word[0])
-                s.pos.append(word[1]["PartOfSpeech"])
-                s.lemmas.append(word[1]["Lemma"])
-                tag = word[1]["NamedEntityTag"]
-                if tag != "O":
-                    if tag in s.nes:
-                        s.nes[tag].append(word[0])
-                    else:
-                        s.nes[tag] = [word[0]]
-            p.sents.append(s)
+    def parse_document(self):
+        # This function parses the entire input document through CoreNLP
+        output = []
 
-        # If there are any corefs, mark them
-        if "coref" in parse:
-            r = re.compile("[\(\),\[\]\-\s]+")
-            for coref in parse["coref"][0]:
-                first = re.split('"', coref)
-                if len(first) > 3:
-                    word_from = first[1]
-                    word_to = first[3]
-                    numbers = re.split("[\(,]+", coref)
-                    loc = int(numbers[1]) - 1
-                    p.sents[loc].corefs[word_from] = word_to
-        return p
+        # redict output for the loading Stanford CoreNLP
+        f_old = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+        for doc in self.batchcorenlp:
+            output.append(doc)
+        if len(output) > 1:
+            print "Too many documents"
+            exit(0)
+        doc = output[0]
+        sents = []
+
+        # Parse sentences
+        for s in doc["sentences"]:
+            sent = Sentence()
+            sent.parsetree = nltk.Tree(s["parsetree"])
+            sent.depends = s["dependencies"]
+            sent.raw = ' '.join(s["text"])
+
+            # Parse words
+            for w in s["words"]:
+                word = Word()
+                word.raw = w[0]
+                word.lemma = w[1]["Lemma"]
+                word.pos = w[1]["PartOfSpeech"]
+                word.ner = w[1]["NamedEntityTag"]
+                if word.ner != "O":
+                    if word.ner in sent.nes:
+                        sent.nes[word.ner].append(word.raw)
+                    else:
+                        sent.nes[word.ner] = [word.raw]
+                sent.words.append(word)
+            sents.append(sent)
+
+        # Parse corefs
+        for coref in doc["coref"][0]:
+            location = int(coref[0][1])
+            co_from = coref[0][0]
+            co_to = coref[1][0]
+            sents[location].corefs[co_from] = co_to
+
+        # Get stdout back
+        sys.stdout = f_old
+
+        return sents
 
     # BM25 Implementation
     def n(self, docs, word):
@@ -237,22 +275,6 @@ class Finder:
             score += idf * (num / dem)
         return score
 
-    def rank_paragraphs(self, keywords):
-        """
-        This function returns the index of the best matching paragraphs, in
-        order of best to worst
-        """
-        scores = []
-        for i in xrange(len(self.paras)):
-            para = self.paras[i]
-            score = self.score(para, self.paras, keywords)
-            scores.append((i, score))
-        
-        # Filter out no matches
-        scores = [x for x in scores if x[1] > 0]
-        scores = sorted(scores, key = lambda x: x[1], reverse = True)
-        return [x[0] for x in scores]
-
     def rank_sentences(self, sents, keywords):
         """
         This function returns the sentences that best match the keywords
@@ -260,10 +282,10 @@ class Finder:
         function returns an empty list
         """
         scores = []
-        raw_sents = [x[0] for x in sents]
-        for sent in sents:
-            score = self.score(sent[0], raw_sents, keywords)
-            scores.append((sent, score))
+        raw_sents = [x.get_searchable() for x in sents]
+        for i in xrange(len(raw_sents)):
+            score = self.score(raw_sents[i], raw_sents, keywords)
+            scores.append((sents[i], score))
 
         # Filter out no matches / no pos match
         scores = [x for x in scores if x[1] > 0]
@@ -271,38 +293,8 @@ class Finder:
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 
-    def yield_search_by_para(self, keywords):
-        """
-        Bad
-        """
-        para_indices = self.rank_paragraphs(keywords)
-        for index in para_indices:
-            para = self.paras[index]
-            stanford_para = self.parse_paragraph(para)
-            #sents = self.rank_sentences(stanford_para, keywords)
-            for sent in sents:
-                yield sent
-        return
-
     def yield_search(self, keywords):
-        sents = []
-        for para in self.paras:
-            para_sents = nltk.sent_tokenize(para)
-            for sent in para_sents:
-                sents.append((sent, para))
-
-        sents = self.rank_sentences(sents, keywords)
-        for (sent, para) in sents:
-            before_para = para.split(sent)[0]
-            para = before_para + sent
-            
-            # Check sentence length -- above 7 sentences doesn't work
-            sents = nltk.sent_tokenize(para)
-            if len(sents) > 5:
-                para = ' '.join(sents[-5:])
-
-            parsed_para = self.parse_paragraph(para)
-            if not parsed_para:
-                continue
-            parsed_sent = parsed_para.sents[-1]
-            yield parsed_sent
+        sents = self.rank_sentences(self.sents, keywords)
+        for sent in sents:
+            yield sent
+        return

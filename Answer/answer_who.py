@@ -24,25 +24,25 @@ def search_tree(tree, to_match):
     return None
 
 def get_definition(name, cop, sent):
-    if cop in sent.lemmas:
-        cop = sent.lemmas.index(cop)
-        cop = sent.words[cop]
+    if sent.has_lemma(cop):
+        cop = sent.get_word(cop)
         return search_tree(sent.parsetree, [name, cop])
     return None
 
 def get_person(action, sent):
     for depend in sent.depends:
         # match the action
-        if depend[0] == "nsubj":
+        if depend[0] == "nsubj" or depend[0] == "nsubjpass":
             verb = depend[1]
-            verb_lemma = sent.words.index(verb)
-            verb_lemma = sent.lemmas[verb_lemma]
+            verb_lemma = sent.get_lemma(verb)
             if verb_lemma == action:
                 name = depend[2]
                 result = search_tree(sent.parsetree, [name, verb])
                 if result and name in sent.corefs:
                     real_name = sent.corefs[name]
-                    return result.replace(name, real_name)
+                    co_from = " %s " % name
+                    co_to = " %s " % real_name
+                    return result.replace(co_from, co_to)
                 return result
     return None
 
@@ -57,14 +57,11 @@ def get_who(sent, parsed_quest):
         if depend[0] == "nsubj" and depend[1].lower() == "who":
             name = [depend[2]]
         elif depend[0] == "cop" and depend[1].lower() == "who":
-            cop = parsed_quest.words.index(depend[2])
-            cop = parsed_quest.lemmas[cop]
+            cop = parsed_quest.get_lemma(depend[2])
         elif depend[0] == "nsubj" and depend[2].lower() == "who":
-            action = parsed_quest.words.index(depend[1])
-            action = parsed_quest.lemmas[action]
+            action = parsed_quest.get_lemma(depend[1])
         elif depend[0] == "nsubjpass" and depend[2].lower() == "who":
-            action = parsed_quest.words.index(depend[1])
-            action = parsed_quest.lemmas[action]
+            action = parsed_quest.get_lemma(depend[1])
     if (name and cop):
         return get_definition(name, cop, sent)
     elif action:

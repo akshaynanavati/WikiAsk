@@ -18,7 +18,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
 import json
 import optparse
 import os
@@ -30,7 +29,7 @@ import tempfile
 import shutil
 from progressbar import ProgressBar, Fraction
 from unidecode import unidecode
-from subprocess import call
+from subprocess import call, PIPE
 
 VERBOSE = False
 STATE_START, STATE_TEXT, STATE_WORDS, STATE_TREE, STATE_DEPENDENCY, STATE_COREFERENCE = 0, 1, 2, 3, 4, 5
