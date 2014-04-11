@@ -204,10 +204,6 @@ class Finder:
         # This function parses the entire input document through CoreNLP
         output = []
 
-        # redict output for the loading Stanford CoreNLP
-        f_old = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-
         for doc in self.batchcorenlp:
             output.append(doc)
         if len(output) > 1:
@@ -244,9 +240,6 @@ class Finder:
             co_from = coref[0][0]
             co_to = coref[1][0]
             sents[location].corefs[co_from] = co_to
-
-        # Get stdout back
-        sys.stdout = f_old
 
         return sents
 
@@ -288,8 +281,7 @@ class Finder:
             scores.append((sents[i], score))
 
         # Filter out no matches / no pos match
-        scores = [x for x in scores if x[1] > 0]
-        #scores = [x for x in scores if self.sentence_has_pos(pos, x[0])]
+        #scores = [x for x in scores if x[1] > 0]
         scores = sorted(scores, key = lambda x: x[1], reverse = True)
         return [x[0] for x in scores]
 

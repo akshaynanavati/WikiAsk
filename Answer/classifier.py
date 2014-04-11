@@ -29,8 +29,8 @@ class Classifier:
             wh_word == "who"):
             return wh_word
      
-        after_index = [x.lower() for x in quest.words].index(wh_word) + 1
-        after = quest.lemmas[after_index]
+        after_index = [x.raw.lower() for x in quest.words].index(wh_word)+ 1
+        after = quest.words[after_index].lemma
         if wh_word == "how":
             if after == "do":
                 return "howdo"
