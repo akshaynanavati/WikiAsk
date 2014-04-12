@@ -18,8 +18,8 @@ class Classifier:
         return None
 
     def classify_other(self, quest):
-        if (quest.lemmas[0] == "do" or quest.lemmas[0] == "be" or
-            quest.pos[0] == "MD"):
+        if (quest.has_lemma("do") or quest.has_lemma("be") or
+            quest.words[0].pos == "MD"):
             return "yesno"
         return None 
 
@@ -42,6 +42,7 @@ class Classifier:
                 return "howmany"
             if after == "much":
                 return "howmuch"
+            return "howdo"
 
         if wh_word == "what":
             if False:

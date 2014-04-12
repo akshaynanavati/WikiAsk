@@ -3,6 +3,7 @@
 import classifier
 import finder
 import sys
+import os
 
 import answer_who
 import answer_where
@@ -22,7 +23,16 @@ def read_questions(questions_filename):
 source_filename = sys.argv[1]
 questions_filename = sys.argv[2]
 
-f = finder.Finder(source_filename)
+# Copy over the text and make it ascii-only characters.
+# Put into a new directory for the Stanford batch parsing
+if not os.path.isdir("texttemp/"):
+    os.mkdir("texttemp/")
+with open(source_filename, 'r') as inputfile:
+    with open("texttemp/text", 'w') as output:
+        text = inputfile.read().decode("ascii", errors = "ignore")
+        output.write(text)
+
+f = finder.Finder("input1/")
 c = classifier.Classifier(f)
 questions = read_questions(questions_filename)
 

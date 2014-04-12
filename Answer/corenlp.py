@@ -315,8 +315,9 @@ def parse_xml_output(input_dir, corenlp_path=DIRECTORY, memory="3g", raw_output=
         + ' -filelist %s -outputDirectory %s' % (file_list.name, xml_dir)
 
     #creates the xml file of parser output:
-
+    command = command + "> tempout 2> temperr"
     call(command, shell=True)
+     
 
     #reading in the raw xml file:
     # result = []

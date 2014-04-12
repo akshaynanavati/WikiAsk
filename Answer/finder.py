@@ -235,7 +235,8 @@ class Finder:
             sents.append(sent)
 
         # Parse corefs
-        for coref in doc["coref"][0]:
+        corefs = [item for sublist in doc["coref"] for item in sublist]
+        for coref in corefs:
             location = int(coref[0][1])
             co_from = coref[0][0]
             co_to = coref[1][0]
