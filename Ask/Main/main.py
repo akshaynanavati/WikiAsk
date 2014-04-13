@@ -43,9 +43,9 @@ def main():
         lib.pretty_print(q)
 
     while len(qs) < nquestions:
-        qs += "could not generate question".split(" ")
+        qs += lib.error("could not generate question")
 
-    qs = qs[:nquestions]
+    qs = filter(lambda x: x != None, qs[:nquestions])
 
     questions = map (lambda l: string.join(l, " "), qs)
     for q in questions:

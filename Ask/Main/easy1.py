@@ -21,13 +21,13 @@ def generate(npvp):
         return [leaves[i]] + leaves[:i] + leaves[i + 1:]
     elif v == "":
         lib.pretty_print("could not find verb in:\n" + pruned)
-        return "could not find verb".split(" ")
+        return lib.error("could not find verb")
     # else
     try:
         present = en.verb.present(v)
         i = leaves.index(v)
         return ["did"] + leaves[:i] + [present] + leaves[i + 1:]
     except:
-        return ("could not conjugate verb '" + v + "'").split(" ")
+        lib.error("could not conjugate verb '" + v + "'")
     #return ["could", "not", "find", "is/was/are"]
         

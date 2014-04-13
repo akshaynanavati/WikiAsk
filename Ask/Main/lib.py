@@ -47,5 +47,10 @@ def prune (t, tag):
             newchildren = newchildren + [prune(child, tag)]
     return nltk.tree.Tree(t.node, newchildren)
 
+def error (s):
+    if DEBUG:
+        return s.split(" ")
+    return None
+
 which_words = set(["this", "that", "these", "those"]) 
                    #"every", "any", "some", "each"])

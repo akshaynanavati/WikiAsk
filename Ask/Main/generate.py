@@ -64,7 +64,7 @@ def generate(wiki, n):
     def gen (sent):
         npvp = find_NP_VP(sent)
         if npvp == None:
-            return "could not find np/vp pattern".split(" ")
+            return lib.error("could not find np/vp pattern")
         if is_subject_prp(npvp):
             return gens["who"](npvp)
         elif is_subject_plural_pp(npvp):
