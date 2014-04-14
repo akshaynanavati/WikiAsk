@@ -6,7 +6,6 @@ import which
 import who
 import generate
 import lib
-import date
 
 #print "starting parse server..."
 #subprocess.call("./runStanfordParserServer.sh", shell=True)
@@ -20,7 +19,6 @@ def main():
         "who" : who.generate,
         "whose" : who.generate_plural,
         "which" : which.generate#,
-        #"what_happened" : date.generate
         })
 
     fname = sys.argv[1]
