@@ -45,3 +45,12 @@ directory, located at
 To run the script:
 
 `./answer.py <source article> <questions>`
+
+Sources
+-------------------
+
+Here are the external libraries and tools we used in this project:
+  - http://www.nltk.org/book/ along with the NLTK library
+  - http://nodebox.net/code/index.php/Linguistics for verb parsing
+  - http://www.ark.cs.cmu.edu/mheilman/questions/ - specifically Java parse server
+  - http://nlp.stanford.edu/software/corenlp.shtml - sentence parsing (server described above)
