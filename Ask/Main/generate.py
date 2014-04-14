@@ -49,14 +49,14 @@ def is_subject_plural_pp(npvp):
     given a tree in npvp form, returns true if the nnp portion
     of the sentence is a PRP (personal pronoun)
     """
-    np = npvp[0]
-    return (type(np[0][0]) != str) and (np[0][0].node == "PRP$")
+    lib.pretty_print (npvp.pos()[0][1])
+    return npvp.pos()[0][1] == "PRP$"
 
 def is_subject_dt(npvp):
     np = npvp[0]
     return (np[0].node == "DT") and (np[0][0].lower() in lib.which_words)
 
-def generate(wiki, n):
+def generate(wiki):
     """
     given a list of parsed sentences as parse trees, generates
     1 question based on that sentence.
@@ -65,14 +65,17 @@ def generate(wiki, n):
         npvp = find_NP_VP(sent)
         if npvp == None:
             return lib.error("could not find np/vp pattern")
-        if is_subject_prp(npvp):
-            return gens["who"](npvp)
+        # what_happened = (gens["what_happened"](npvp), lib.HARD)
+        # if what_happened[0] != None:
+        #     return what_happened
+        elif is_subject_prp(npvp):
+            return (gens["who"](npvp), lib.HARD)
         elif is_subject_plural_pp(npvp):
-            return gens["whose"](npvp)
+            return (gens["whose"](npvp), lib.MEDIUM)
         elif is_subject_dt(npvp):
-            return gens["which"](npvp)
+            return (gens["which"](npvp), lib.HARD)
         # else
-        return gens["basic"](npvp)
+        return (gens["basic"](npvp), lib.EASY)
     return map(gen, wiki)
 
 # random alg generation

@@ -1,7 +1,11 @@
-import nltk
+import nltk, string, random
 
-DEBUG = False
+DEBUG = False # macro if set to true gives informative output
 PORT = 5557
+
+EASY = 0
+MEDIUM = 1
+HARD = 2
 
 def set_debug (db):
     global DEBUG
@@ -51,6 +55,26 @@ def error (s):
     if DEBUG:
         return s.split(" ")
     return None
+
+import re
+
+PUNC_REPLACE = set([".", "!", ",", "?"])
+PUNC_SPACING_FIX = set(["\.", "!", ","])
+
+def format(text):
+    # get rid of any punctuation at the end
+    if text[-1] in PUNC_REPLACE:
+        text = text[0:-1]
+    
+    text = " ".join(text)
+    text = re.sub(re.compile(r"\s\'"),"\'", text)
+    for p in PUNC_SPACING_FIX:
+        text = re.sub(re.compile(r"\s%s\s" % p),"%s " % p, text)
+
+    return text + "?"
+
+def wc(sent):
+    return len(sent)
 
 which_words = set(["this", "that", "these", "those"]) 
                    #"every", "any", "some", "each"])

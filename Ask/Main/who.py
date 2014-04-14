@@ -3,15 +3,15 @@ import sys, nltk
 import lib
 
 def generate_plural(npvp):
-    pruned = lib.prune(npvp, "SBAR")
+    pruned = npvp # lib.prune(npvp, "SBAR")
     cci = lib.find_index(pruned, "CC")
     prunei = cci
     leaves = pruned.leaves()[:prunei]
-    return ["whose"] + leaves[1:]
+    return ["Whose"] + leaves[1:]
 
 def generate(npvp):
-    pruned = lib.prune(nltk.tree.Tree("S", npvp[1:]), "SBAR")
+    pruned = nltk.tree.Tree("S", npvp[1:]) # lib.prune(nltk.tree.Tree("S", npvp[1:]), "SBAR")
     cci = lib.find_index(pruned, "CC")
     prunei = cci
     leaves = pruned.leaves()[:prunei]
-    return ["who"] + leaves
+    return ["Who"] + [leaves[0].lower()] + leaves[1:]

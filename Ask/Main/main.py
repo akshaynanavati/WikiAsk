@@ -1,4 +1,4 @@
-import sys, os, string, subprocess, nltk
+import sys, os, string, subprocess, nltk, random
 
 import parse
 import easy1
@@ -6,48 +6,61 @@ import which
 import who
 import generate
 import lib
+import date
 
 #print "starting parse server..."
 #subprocess.call("./runStanfordParserServer.sh", shell=True)
 #print "started"
 
 def main():
+    # lib.set_debug(True)
     # add other generation functions to this list
     generate.register_generation({
         "basic" : easy1.generate,
         "who" : who.generate,
         "whose" : who.generate_plural,
-        "which" : which.generate
+        "which" : which.generate#,
+        #"what_happened" : date.generate
         })
 
     fname = sys.argv[1]
     nquestions = int(sys.argv[2])
 
-    article = ""
-    pars = 0
+    paras = []
 
     f = open(fname)
-    while pars <= 4: # take only first 4 paragraphs
+    line = f.readline()
+    # take only real paragraphs, not titles or tables
+    while line != "":
+        if len(line) > 70:
+            paras += [line]
         line = f.readline()
-        if len(line) > 80:
-            article += line
-            pars += 1
     f.close()
 
-    parsed = parse.parse(article)
-    for p in parsed:
-        lib.pretty_print(p)
+    all_qs = []
+    qs = []
 
-    qs = generate.generate(parsed, nquestions)
-    for q in qs:
-        lib.pretty_print(q)
+    while (len(qs) < nquestions) and (len(paras) > 0):
+        i = random.randint(0, len(paras) - 1)
+        p = paras.pop(i)
+        parsed = parse.parse(p)
+        all_qs += filter(lambda x: (type(x) == tuple) and 
+                                   (x[0] != None) and 
+                                   (lib.wc(x[0]) > 5),
+                         generate.generate(parsed))
+        flips = [random.randint(0, 2) for i in xrange(len(all_qs))]
+        new_qs = []
+        for i in xrange(len(flips)):
+            if flips[i] == 0:
+                #print all_qs
+                qs += [all_qs[i][0]]
+            else:
+                new_qs += [all_qs[i]]
+        all_qs = new_qs
 
-    while len(qs) < nquestions:
-        qs += lib.error("could not generate question")
-
-    qs = filter(lambda x: x != None, qs[:nquestions])
-
-    questions = map (lambda l: string.join(l, " "), qs)
+    lib.pretty_print(qs)
+    lib.pretty_print(all_qs)
+    questions = map (lib.format, qs)
     for q in questions:
         print q
 
