@@ -8,7 +8,7 @@ def get_overlap(list1, list2):
         list2 = list2.split()
     overlap = [x for x in list1 if x in list2]
     print list1, "000", list2, "000", overlap
-    return float(len(overlap))/len(list1)
+    return float(len(overlap))/len(list2)
 
 def trim_tree(tree, sent, quest, goal):
     if hasattr(tree, "node") and tree.node:
@@ -27,14 +27,15 @@ def trim_tree(tree, sent, quest, goal):
     return None
 
 def answer_what(sent, parsed_quest):
-    s = ""
-    for word in sent:
-        if word in sent.corefs:
-            s += sent.corefs[word] + " "
+    s = []
+    for word in sent.words:
+        if word.raw in sent.corefs:
+            s.append(sent.corefs[word.raw])
         else:
-            s += sent.get_lemma(word) + " "
+            s.append(word.lemma)
+    s = ' '.join(s)
     overlap = get_overlap(s, parsed_quest.raw)
-    result = trim_tree(sent.parsetree, parsed_quest, overlap * .8)
+    result = trim_tree(sent.parsetree, sent, parsed_quest, overlap * .8)
     final = []
     for word in result:
         if word in sent.corefs:
