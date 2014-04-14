@@ -41,7 +41,7 @@ must be located in the Ask/Main/ directory, located at
 
 To run the script:
 
-python ask.py <source article> <n>
+./ask.py <source article> <n>
 
 
 
@@ -53,4 +53,4 @@ directory, located at
 
 To run the script:
 
-python answer.py <source article> <questions>
+./answer.py <source article> <questions>

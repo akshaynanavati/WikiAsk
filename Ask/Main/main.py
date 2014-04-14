@@ -7,12 +7,7 @@ import who
 import generate
 import lib
 
-#print "starting parse server..."
-#subprocess.call("./runStanfordParserServer.sh", shell=True)
-#print "started"
-
 def main():
-    # lib.set_debug(True)
     # add other generation functions to this list
     generate.register_generation({
         "basic" : easy1.generate,
@@ -50,7 +45,6 @@ def main():
         new_qs = []
         for i in xrange(len(flips)):
             if flips[i] == 0:
-                #print all_qs
                 qs += [all_qs[i][0]]
             else:
                 new_qs += [all_qs[i]]

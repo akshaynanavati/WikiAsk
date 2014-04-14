@@ -12,7 +12,6 @@ def generate(npvp):
         return x.lower()
     capitalize = ident
     if pruned.pos()[0][1] != "NNP":
-        print pruned.pos()[0][1]
         capitalize = lower
 
     cci = lib.find_index(pruned, "CC")
