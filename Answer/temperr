@@ -1,41 +1,9 @@
 Adding annotator tokenize
 Adding annotator ssplit
 Adding annotator pos
-Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [2.1 sec].
+Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [4.5 sec].
 Adding annotator lemma
 Adding annotator ner
-Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [5.1 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [5.0 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [3.6 sec].
-Reading TokensRegex rules from edu/stanford/nlp/models/sutime/defs.sutime.txt
-Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.sutime.txt
-Ignoring inactive rule: null
-Ignoring inactive rule: temporal-composite-8:ranges
-Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.holidays.sutime.txt
-Initializing JollyDayHoliday for sutime with classpath:edu/stanford/nlp/models/sutime/jollyday/Holidays_sutime.xml
-Reading TokensRegex rules from edu/stanford/nlp/models/sutime/defs.sutime.txt
-Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.sutime.txt
-Ignoring inactive rule: null
-Ignoring inactive rule: temporal-composite-8:ranges
-Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.holidays.sutime.txt
-Adding annotator parse
-Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [1.0 sec].
-Adding annotator dcoref
-
-Ready to process: 1 files, skipped 0, total 1
-Processing file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text ... writing to /private/var/folders/4b/f_x8j3mx7639pt53s3145lf00000gn/T/tmpEfNhX9/text.xml {
-  Annotating file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text [03:33.420 minutes]
-} [03:34.485 minutes]
-Processed 1 documents
-Skipped 0 documents, error annotating 0 documents
-Annotation pipeline timing information:
-PTBTokenizerAnnotator: 0.0 sec.
-WordsToSentencesAnnotator: 0.0 sec.
-POSTaggerAnnotator: 0.5 sec.
-MorphaAnnotator: 0.1 sec.
-NERCombinerAnnotator: 4.5 sec.
-ParserAnnotator: 187.4 sec.
-DeterministicCorefAnnotator: 20.9 sec.
-TOTAL: 213.4 sec. for 4116 tokens at 19.3 tokens/sec.
-Pipeline setup: 31.7 sec.
-Total time for StanfordCoreNLP pipeline: 246.2 sec.
+Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [13.6 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [5.3 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... 

@@ -27,7 +27,8 @@ class Classifier:
         wh_word = wh_word.lower()
         if wh_word == "who" or wh_word == "whose":
             return "who"
-        if wh_word == "when" or wh_word == "where" or wh_word == "why":
+        if (wh_word == "when" or wh_word == "where" or wh_word == "why" or
+            wh_word == "what"):
             return wh_word
      
         after_index = [x.raw.lower() for x in quest.words].index(wh_word)+ 1
@@ -44,20 +45,6 @@ class Classifier:
             if after == "much":
                 return "howmuch"
             return "howdo"
-
-        if wh_word == "what":
-            if False:
-                return "whatequiv"
-            if after == "type" or after == "kind":
-                return "whattype"
-            if False:
-                return "whatprep"
-            if False:
-                return "whatrole"
-            if False:
-                return "whattime"
-            if False:
-                return "whatmeas"
 
         return None
 

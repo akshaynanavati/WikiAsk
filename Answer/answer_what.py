@@ -1,34 +1,58 @@
 import nltk
 
-"""
-def answer_what(sent, parsed_quest):
-    tree = sent.parsetree
+def get_overlap(list1, list2):
+    print type(list1), type(list2)
+    if not isinstance(list1, list):
+        list1 = list1.split()
+    if not isinstance(list2, list):
+        list2 = list2.split()
+    overlap = [x for x in list1 if x in list2]
+    print list1, "000", list2, "000", overlap
+    return float(len(overlap))/len(list1)
+
+def trim_tree(tree, sent, quest, goal):
     if hasattr(tree, "node") and tree.node:
-        if (tree.node in [])
-"""
-def answer(quest, f, kind):
+        for child in tree:
+            result = trim_tree(child, sent, quest, goal)
+            if result:
+                return result
+        words = []
+        for w in tree.leaves():
+            if w in sent.corefs:
+                words.append(sent.corefs[w])
+            else:
+                words.append(sent.get_lemma(w))
+        if get_overlap(words, quest.raw) >= goal:
+            return tree.leaves()
+    return None
+
+def answer_what(sent, parsed_quest):
+    s = ""
+    for word in sent:
+        if word in sent.corefs:
+            s += sent.corefs[word] + " "
+        else:
+            s += sent.get_lemma(word) + " "
+    overlap = get_overlap(s, parsed_quest.raw)
+    result = trim_tree(sent.parsetree, parsed_quest, overlap * .8)
+    final = []
+    for word in result:
+        if word in sent.corefs:
+            final.append(sent.corefs[word])
+        else:
+            final.append(word)
+    return ' '.join(final)
+
+def answer(quest, f):
     """
     This function is used to answer the what question, given the 
     question as a complete setence and the finder object
     """
-    """
     tokens = nltk.word_tokenize(quest)
     for sent in f.yield_search(tokens):
         parsed_quest = f.parse_sentence(quest)
-        if kind == "whatequiv":
-            answer = answer_equiv(sent, parsed_quest)
-        elif kind == "whattype":
-            answer = answer_type(sent, parsed_quest)
-        elif kind == "whatprep":
-            answer = answer_prep(sent, parsed_quest)
-        elif kind == "whatrole":
-            answer = answer_role(sent, parsed_quest)
-        elif kind == "whattime":
-            answer = answer_time(sent, parsed_quest)
-        elif kind == "whatmeas":
-            answer = answer_meas(sent, parsed_quest)
+        answer = answer_what(sent, parsed_quest)
         if answer:
             return answer
-    """
     return None
 
