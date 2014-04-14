@@ -54,3 +54,10 @@ Here are the external libraries and tools we used in this project:
   - http://nodebox.net/code/index.php/Linguistics for verb parsing
   - http://www.ark.cs.cmu.edu/mheilman/questions/ - specifically Java parse server
   - http://nlp.stanford.edu/software/corenlp.shtml - sentence parsing (server described above)
+  - http://en.wikipedia.org/wiki/Okapi_BM25 - overall information retrieval algorithm
+  - http://trec.nist.gov/pubs/trec9/papers/msrc-qa.pdf - ideas for overall implementation
+  - http://nlp.stanford.edu/software/corenlp.shtml - StanfordCoreNLP, very useful text processing API
+  - https://pypi.python.org/pypi/corenlp-python/3.2.0-3 - beginnings of communication with StanfordCoreNLP
+  - http://nlp.stanford.edu/software/dependencies_manual.pdf - manual for dependencies
+  - http://stackoverflow.com/questions/2281850/timeout-function-if-it-takes-too-long-to-finish - decorator for StanfordCoreNLP Timing
+~                   
