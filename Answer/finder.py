@@ -57,6 +57,12 @@ class Sentence:
                 return True
         return False
 
+    def has_word(self, word):
+        for w in self.words:
+            if w.raw == word:
+                return True
+        return False
+
 class TimeoutError(Exception):
     pass
 

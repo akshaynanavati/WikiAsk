@@ -32,7 +32,7 @@ with open(source_filename, 'r') as inputfile:
         text = inputfile.read().decode("ascii", errors = "ignore")
         output.write(text)
 
-f = finder.Finder("input1/")
+f = finder.Finder("texttemp/")
 c = classifier.Classifier(f)
 questions = read_questions(questions_filename)
 

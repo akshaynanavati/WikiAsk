@@ -62,6 +62,10 @@ def get_who(sent, parsed_quest):
             action = parsed_quest.get_lemma(depend[1])
         elif depend[0] == "nsubjpass" and depend[2].lower() == "who":
             action = parsed_quest.get_lemma(depend[1])
+        elif depend[0] == "nsubjpass":
+            # not really name
+            name = depend[2]
+            cop = depend[2]
     if (name and cop):
         return get_definition(name, cop, sent)
     elif action:

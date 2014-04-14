@@ -25,8 +25,9 @@ class Classifier:
 
     def classify_wh(self, wh_word, quest):
         wh_word = wh_word.lower()
-        if (wh_word == "when" or wh_word == "where" or wh_word == "why" or
-            wh_word == "who"):
+        if wh_word == "who" or wh_word == "whose":
+            return "who"
+        if wh_word == "when" or wh_word == "where" or wh_word == "why":
             return wh_word
      
         after_index = [x.raw.lower() for x in quest.words].index(wh_word)+ 1
