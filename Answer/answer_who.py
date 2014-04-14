@@ -65,7 +65,7 @@ def get_who(sent, parsed_quest):
         elif depend[0] == "nsubjpass":
             # not really name
             name = depend[2]
-            cop = depend[2]
+            cop = depend[1]
     if (name and cop):
         return get_definition(name, cop, sent)
     elif action:

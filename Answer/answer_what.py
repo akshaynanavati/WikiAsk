@@ -52,6 +52,7 @@ def answer(quest, f):
     tokens = nltk.word_tokenize(quest)
     for sent in f.yield_search(tokens):
         parsed_quest = f.parse_sentence(quest)
+        return sent.raw
         answer = answer_what(sent, parsed_quest)
         if answer:
             return answer

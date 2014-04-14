@@ -1,12 +1,12 @@
 Adding annotator tokenize
 Adding annotator ssplit
 Adding annotator pos
-Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [4.3 sec].
+Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [0.9 sec].
 Adding annotator lemma
 Adding annotator ner
-Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [11.7 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [9.2 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [8.7 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [3.2 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [1.5 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [2.1 sec].
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/defs.sutime.txt
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.sutime.txt
 Ignoring inactive rule: null
@@ -19,23 +19,23 @@ Ignoring inactive rule: null
 Ignoring inactive rule: temporal-composite-8:ranges
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.holidays.sutime.txt
 Adding annotator parse
-Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [2.7 sec].
+Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [0.7 sec].
 Adding annotator dcoref
 
 Ready to process: 1 files, skipped 0, total 1
-Processing file /home/arjun/Private/11411/WikiAsk/Answer/texttemp/text ... writing to /tmp/tmpU1qmic/text.xml {
-  Annotating file /home/arjun/Private/11411/WikiAsk/Answer/texttemp/text [10.891 seconds]
-} [11.48 seconds]
+Processing file /afs/andrew.cmu.edu/usr3/pmassey/Public/project/WikiAsk/Answer/texttemp/text ... writing to /tmp/tmpHxACgt/text.xml {
+  Annotating file /afs/andrew.cmu.edu/usr3/pmassey/Public/project/WikiAsk/Answer/texttemp/text [05:17.171 minutes]
+} [05:18.418 minutes]
 Processed 1 documents
 Skipped 0 documents, error annotating 0 documents
 Annotation pipeline timing information:
-PTBTokenizerAnnotator: 0.1 sec.
+PTBTokenizerAnnotator: 0.0 sec.
 WordsToSentencesAnnotator: 0.0 sec.
-POSTaggerAnnotator: 0.1 sec.
+POSTaggerAnnotator: 0.3 sec.
 MorphaAnnotator: 0.1 sec.
-NERCombinerAnnotator: 2.3 sec.
-ParserAnnotator: 7.2 sec.
-DeterministicCorefAnnotator: 1.1 sec.
-TOTAL: 10.9 sec. for 199 tokens at 18.3 tokens/sec.
-Pipeline setup: 125.4 sec.
-Total time for StanfordCoreNLP pipeline: 136.5 sec.
+NERCombinerAnnotator: 7.7 sec.
+ParserAnnotator: 283.2 sec.
+DeterministicCorefAnnotator: 25.8 sec.
+TOTAL: 317.2 sec. for 4116 tokens at 13.0 tokens/sec.
+Pipeline setup: 17.1 sec.
+Total time for StanfordCoreNLP pipeline: 335.5 sec.

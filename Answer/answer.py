@@ -4,6 +4,7 @@ import classifier
 import finder
 import sys
 import os
+import nltk
 
 import answer_who
 import answer_where
@@ -61,4 +62,7 @@ for question in questions:
     if answer:
         print answer
     else:
-        print "Did not find that question a home."
+        # Last ditch effort .... just return the best sentence.
+        tokens = nltk.word_tokenize(question)
+        sent = next(f.yield_search(tokens))
+        print sent.raw
