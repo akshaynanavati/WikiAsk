@@ -7,7 +7,8 @@ A program to generate and answer questions based on wikipedia articles for our N
 
 Before you start
 ----------------
-If you are in a bash shell, simply run `source setup.sh` and skip the rest
+If you are in a bash shell (recommended; to switch into one just 
+run `/bin/bash`), simply run `source setup.sh` and skip the rest
 of this section.
 
 If you are in a C shell:
