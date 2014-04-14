@@ -7,16 +7,15 @@ A program to generate and answer questions based on wikipedia articles for our N
 
 Before you start
 ----------------
+If you are in a bash shell, simply run `source setup.sh` and skip the rest
+of this section.
+
+If you are in a C shell:
+
 Activate the virtual environment, which can be found at
-/afs/andrew.cmu.edu/usr3/pmassey/Public/project/
+/afs/andrew.cmu.edu/usr3/pmassey/Public/project/ by:
 
-If you're in a C shell, run:
-
-source bootstrapenv/bin/activate.csh
-
-Otherwise, if you're in a bash shell, run:
-
-source bootstrapenv/bin/activate
+source ../bootstrapenv/bin/activate.csh
 
 You will know you're on the virtual environment if your prompt changes as such:
 
@@ -27,12 +26,6 @@ one of two ways. If you're using a C shell, then run:
 
 setenv NLTK_DATA /afs/andrew.cmu.edu/usr3/pmassey/Public/project/ntlk_data/
 
-Otherwise if you're on a bash shell, then run:
-
-export NLTK_DATA=/afs/andrew.cmu.edu/usr3/pmassey/Public/project/nltk_data/
-
-
-
 Question Generation
 -------------------
 To run our question generation script, you must be in a bash shell and you
@@ -42,8 +35,6 @@ must be located in the Ask/Main/ directory, located at
 To run the script:
 
 ./ask.py <source article> <n>
-
-
 
 Question Answering
 ------------------
