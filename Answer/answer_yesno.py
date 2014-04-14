@@ -64,18 +64,14 @@ def get_yesno(sent, parsed_quest):
     # Get sentence info
     sinfo = get_deps(sent)
     qinfo = get_deps(parsed_quest)
-    print sent.raw, sinfo
-    print parsed_quest.raw, qinfo
     for qsubj in qinfo:
         for ssubj in sinfo:
             if qsubj == ssubj or strings_within(qsubj, ssubj):
                 for qact in qinfo[qsubj]["acts"]:
                     if qact not in sinfo[ssubj]["acts"]:
-                        print qact, "no"
                         return "No"
                     if (qinfo[qsubj]["acts"][qact] != 
                         sinfo[ssubj]["acts"][qact]):
-                        print "neg mismatch"
                         return "No"
     return "Yes"
 
@@ -87,20 +83,18 @@ def exact_match(parsed_quest, f):
     for i in xrange(1, len(parsed_quest.words)):
         word = parsed_quest.words[i]
         if word.pos not in ["NN", "NNP", "NNS", "NNPS"]:
-            to_match = parsed_quest.words[i:]
+            to_match = parsed_quest.words[i:-1]
             subj = parsed_quest.words[1:i]
-            print "to match:", parsed_quest.words[i+1:]
             break
     to_match = ' '.join([x.raw for x in to_match])
     subj = ' '.join([x.raw for x in subj])
     for sent in f.sents:
         raw = ' '.join([x.raw for x in sent.words])
         if to_match in raw:
-            print "match!"
             for coref in sent.corefs:
                 if strings_within(subj, coref):
                     return "Yes"
-            if subj in raw:
+            if subj in raw or strings_within(subj, raw):
                 return "Yes"
     return None 
 
