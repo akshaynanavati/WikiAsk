@@ -91,16 +91,19 @@ class Finder:
             self.text = ""
             self.sents = []
 
-    def __init__(self, filedir):
-        #with open(filename, 'r') as inputfile:
-        #    self.raw = inputfile.read()
-        #paras = self.raw.split('\n\n')
-        #self.paras = [x for x in paras if len(x) > 0]
-        self.filedir = filedir
-        self.corenlp = StanfordCoreNLP()
-        self.batchcorenlp = batch_parse(filedir)
-        self.sents = self.parse_document()
-        #self.entities = self.get_entities(self.raw)
+    def __init__(self, filedir, skip=False):
+        if not skip:
+            self.filedir = filedir
+            self.corenlp = StanfordCoreNLP()
+            self.batchcorenlp = batch_parse(filedir)
+            self.sents = self.parse_document()
+        else:
+            self.sents = []
+            sents = nltk.sent_tokenize(open(filedir, 'r').read())
+            for sent in sents:
+                s = Sentence()
+                s.raw = sent
+                self.sents.append(s)
 
     def get_entities(self, text):
         """

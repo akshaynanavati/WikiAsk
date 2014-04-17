@@ -36,24 +36,25 @@ with open(source_filename, 'r') as inputfile:
 try:
     f = finder.Finder("texttemp/")
 except:
-    with open(source_filename, 'r') as inputfile:
-        with open("texttemp/text", 'w') as output:
-            for line in inputfile.readlines():
-                sents = nltk.sent_tokenize(line)
-                for sent in sents:
-                    text = sent.decode("ascii", errors = "ignore")
-                    if len(text) == len(sent):
-                        output.write(text)
-                output.write('\n')
-    f = finder.Finder("texttemp/")
+    try:
+        with open(source_filename, 'r') as inputfile:
+            with open("texttemp/text", 'w') as output:
+                for line in inputfile.readlines():
+                    sents = nltk.sent_tokenize(line)
+                    for sent in sents:
+                        text = sent.decode("ascii", errors = "ignore")
+                        if len(text) == len(sent):
+                            output.write(text)
+                    output.write('\n')
+        f = finder.Finder("texttemp/")
+    except:
+        f = finder.Finder(source_filename, True)
 
 c = classifier.Classifier(f)
 questions = read_questions(questions_filename)
 
 for question in questions:
     wh_word = c.classify(question)
-    if not wh_word:
-        print "Failed to parse."
     
     answer = None
     if wh_word == "who":
