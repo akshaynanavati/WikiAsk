@@ -70,9 +70,6 @@ def get_who(sent, parsed_quest):
         return get_definition(name, cop, sent)
     elif action:
         return get_person(action, sent)
-    else:
-        print parsed_quest.depends
-        print "Could not find key words in: %s" % parsed_quest.raw
     return None
 
 def answer(quest, f):
