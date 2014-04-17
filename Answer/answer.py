@@ -30,10 +30,24 @@ if not os.path.isdir("texttemp/"):
     os.mkdir("texttemp/")
 with open(source_filename, 'r') as inputfile:
     with open("texttemp/text", 'w') as output:
-        text = inputfile.read().decode("ascii", errors = "ignore")
-        output.write(text)
+        for line in inputfile.readlines():
+            text = line.decode("ascii", errors = "ignore")
+            output.write(text)
+try:
+    f = finder.Finder("texttemp/")
+except:
+    print "ugh"
+    with open(source_filename, 'r') as inputfile:
+        with open("texttemp/text", 'w') as output:
+            for line in inputfile.readlines():
+                sents = nltk.sent_tokenize(line)
+                for sent in sents:
+                    text = sent.decode("ascii", errors = "ignore")
+                    if len(text) == len(sent):
+                        output.write(text)
+                output.write('\n')
+    f = finder.Finder("texttemp/")
 
-f = finder.Finder("texttemp/")
 c = classifier.Classifier(f)
 questions = read_questions(questions_filename)
 
