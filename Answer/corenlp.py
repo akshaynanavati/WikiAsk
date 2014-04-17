@@ -245,18 +245,21 @@ def parse_parser_xml_results(xml, file_name="", raw_output=False):
                          int(raw_coref_list[j][u'mention'][i]['end']) - 1]
                         for i in xrange(len(raw_coref_list[j][u'mention']))]
                        for j in xrange(len(raw_coref_list))]
+        try:
+            coref_list = []
+            for j in xrange(len(coref_index)):
+                coref_list.append(coref_index[j])
+                for k, coref in enumerate(coref_index[j]):
+                    exted = raw_sent_list[coref[0]]['tokens']['token'][coref[2]:coref[3]]
+                    exted_words = map(lambda x: x['word'], exted)
+                    coref_list[j][k].insert(0, ' '.join(exted_words))
 
-        coref_list = []
-        for j in xrange(len(coref_index)):
-            coref_list.append(coref_index[j])
-            for k, coref in enumerate(coref_index[j]):
-                exted = raw_sent_list[coref[0]]['tokens']['token'][coref[2]:coref[3]]
-                exted_words = map(lambda x: x['word'], exted)
-                coref_list[j][k].insert(0, ' '.join(exted_words))
-
-        coref_list = [[[coref_list[j][i], coref_list[j][0]]
-                       for i in xrange(len(coref_list[j])) if i != 0]
+            coref_list = [[[coref_list[j][i], coref_list[j][0]]
+                           for i in xrange(len(coref_list[j])) if i != 0]
                       for j in xrange(len(coref_list))]
+        except:
+            coref_list = []
+
     else:
         coref_flag = False
 

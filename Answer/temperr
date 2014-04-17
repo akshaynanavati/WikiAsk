@@ -1,12 +1,12 @@
 Adding annotator tokenize
 Adding annotator ssplit
 Adding annotator pos
-Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [2.0 sec].
+Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [2.2 sec].
 Adding annotator lemma
 Adding annotator ner
-Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [5.6 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [4.6 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [3.8 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [5.7 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [4.7 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [3.4 sec].
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/defs.sutime.txt
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.sutime.txt
 Ignoring inactive rule: null
@@ -19,24 +19,24 @@ Ignoring inactive rule: null
 Ignoring inactive rule: temporal-composite-8:ranges
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.holidays.sutime.txt
 Adding annotator parse
-Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [1.2 sec].
+Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [1.0 sec].
 Adding annotator dcoref
 
 Ready to process: 1 files, skipped 0, total 1
-Processing file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text ... writing to /private/var/folders/4b/f_x8j3mx7639pt53s3145lf00000gn/T/tmpNKcdEK/text.xml {
-  Annotating file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text WARNING: Parsing of sentence failed, possibly because of out of memory.  Will ignore and continue: Career statistics Club As of 13 January 2013 International goals Honours Barcelona UEFA Super Cup : 2009 , 2011 ; Runner-up 2006 FIFA Club World Cup : 2009 , 2011 ; Runner-up 2006 Spain FIFA World Cup : 2010 UEFA European Football Championship : 2008 , 2012 UEFA European Under-19 Football Championship : 2002 UEFA European Under-17 Football Championship : 2001 Individual UEFA Euro Team of the Tournament : 2008 , 2012 UEFA Euro 2008 Man Of The Match Semi-final vs. Russia La Liga Spanish Player of the Year : 2009 La Liga 's Best Attacking Midfielder : 2009 , 2011 , 2012 FIFA/FIFPro World XI : 2009 , 2010 , 2011 , 2012 UEFA Team of the Year : 2009 , 2010 , 2011 Ballon d'Or : 4th Place 2009 2010 FIFA World Cup All-Star Team 2010 FIFA World Cup Man Of The Match vs. Chile , Paraguay and Final vs Netherlands Prince of Asturias Awards : 2010 FIFA Ballon d'Or : 2nd place 2010 , 4th Place 2011 , 3rd Place 2012 ESM Team of the Year : 2011 UEFA Euro 2012 Man Of The Match vs. Italy , Croatia , Final vs Italy UEFA Euro Player of the Tournament : 2012 UEFA Best Player in Europe Award : 2012 IFFHS World 's Best Playmaker : 2012 Decorations Gold Medal of the Royal Order of Sporting Merit : 2011 References External links FC Barcelona profile BDFutbol profile National team data Transfermarkt profile 2010 FIFA World Cup profile
-[02:11.418 minutes]
-} [02:11.929 minutes]
+Processing file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text ... writing to /private/var/folders/4b/f_x8j3mx7639pt53s3145lf00000gn/T/tmpucZIpW/text.xml {
+  Annotating file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text WARNING: Parsing of sentence failed, possibly because of out of memory.  Will ignore and continue: Most international goals in a year -LRB- club and national team -RRB- : 25 goals -LRB- shared with Vivian Woodward -RRB- Most goals scored in FIFA Club World Cup : 4 goals -LRB- held jointly with Denilson and Mohamed Aboutrika -RRB- Europe Most goals scored in a season -LRB- club -RRB- : 73 goals Most goals scored in a year -LRB- club -RRB- : 79 goals Most goals scored in a European Cup season : 14 goals -LRB- held jointly with Jos Altafini -RRB- Most European Cup top scorer awards : 4 -LRB- shared with Gerd Mller -RRB- Highest scorer in a European Cup game : 5 goals -LRB- held jointly with ten other players -RRB- Argentina Most goals scored in a year -LRB- national team -RRB- : 12 goals -LRB- shared with Batistuta -RRB- Spain Most goals scored in La Liga in a season : 50 goals Most La Liga hat-tricks in a season : 8 hat-tricks Most goals scored in the Supercopa de Espaa : 10 goals Most consecutive La Liga matches scored in : 10 matches -LRB- shared with Ronaldo and Mariano Martn -RRB- Barcelona Top scorer in official competitions : 289 goals Top scorer in La Liga : 196 goals Top scorer in UEFA Champions League : 56 goals Top scorer in European competitions : 57 goals Top scorer in international competitions : 61 goals Most all competitions hat-tricks overall : 21 goals Most La Liga hat-tricks overall : 15 goals References External links Official website -LRB- Catalan -RRB- -LRB- English -RRB- -LRB- Spanish -RRB- Lionel Messi on Facebook FC Barcelona profile BDFutbol profile La Liga profile Transfermarkt profile Lionel Messi career stats at Soccerbase Profile at ESPN Lionel Messi at National-Football-Teams .
+[06:40.42 minutes]
+} [06:41.520 minutes]
 Processed 1 documents
 Skipped 0 documents, error annotating 0 documents
 Annotation pipeline timing information:
-PTBTokenizerAnnotator: 0.0 sec.
+PTBTokenizerAnnotator: 0.1 sec.
 WordsToSentencesAnnotator: 0.0 sec.
-POSTaggerAnnotator: 0.5 sec.
+POSTaggerAnnotator: 0.9 sec.
 MorphaAnnotator: 0.1 sec.
-NERCombinerAnnotator: 6.2 sec.
-ParserAnnotator: 116.6 sec.
-DeterministicCorefAnnotator: 8.0 sec.
-TOTAL: 131.4 sec. for 2331 tokens at 17.7 tokens/sec.
-Pipeline setup: 32.2 sec.
-Total time for StanfordCoreNLP pipeline: 164.2 sec.
+NERCombinerAnnotator: 8.1 sec.
+ParserAnnotator: 221.1 sec.
+DeterministicCorefAnnotator: 169.8 sec.
+TOTAL: 400.0 sec. for 9846 tokens at 24.6 tokens/sec.
+Pipeline setup: 32.4 sec.
+Total time for StanfordCoreNLP pipeline: 433.9 sec.

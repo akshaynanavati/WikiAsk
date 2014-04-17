@@ -36,7 +36,6 @@ with open(source_filename, 'r') as inputfile:
 try:
     f = finder.Finder("texttemp/")
 except:
-    print "ugh"
     with open(source_filename, 'r') as inputfile:
         with open("texttemp/text", 'w') as output:
             for line in inputfile.readlines():
