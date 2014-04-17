@@ -1,13 +1,11 @@
 import nltk
 
 def get_overlap(list1, list2):
-    print type(list1), type(list2)
     if not isinstance(list1, list):
         list1 = list1.split()
     if not isinstance(list2, list):
         list2 = list2.split()
     overlap = [x for x in list1 if x in list2]
-    print list1, "000", list2, "000", overlap
     return float(len(overlap))/len(list2)
 
 def trim_tree(tree, sent, quest, goal):

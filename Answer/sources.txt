@@ -1,19 +1,13 @@
+Sources for Question Answering
+
+Information Retrieval
 http://en.wikipedia.org/wiki/Okapi_BM25
 http://trec.nist.gov/pubs/trec9/papers/msrc-qa.pdf
 
+Text / Information Parsing
 http://www.nltk.org/book/
-
-https://github.com/emilmont/pyStatParser
-
-http://web.media.mit.edu/~hugo/montylingua/
-https://bitbucket.org/cnu/montylingua3/overview
-
-http://labix.org/python-dateutil
-http://nlp.stanford.edu/software/CRF-NER.shtml
-
-https://gist.github.com/322906/90dea659c04570757cccf0ce1e6d26c9d06f9283
-
 https://pypi.python.org/pypi/corenlp-python/3.2.0-3
 http://nlp.stanford.edu/software/dependencies_manual.pdf
 
+Timeout calls to StanfordCoreNLP when being problematic
 http://stackoverflow.com/questions/2281850/timeout-function-if-it-takes-too-long-to-finish

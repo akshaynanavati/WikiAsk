@@ -1,12 +1,12 @@
 Adding annotator tokenize
 Adding annotator ssplit
 Adding annotator pos
-Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [2.2 sec].
+Reading POS tagger model from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [1.4 sec].
 Adding annotator lemma
 Adding annotator ner
-Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [5.7 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [5.4 sec].
-Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [4.4 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [4.2 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [4.0 sec].
+Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [5.2 sec].
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/defs.sutime.txt
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.sutime.txt
 Ignoring inactive rule: null
@@ -19,23 +19,24 @@ Ignoring inactive rule: null
 Ignoring inactive rule: temporal-composite-8:ranges
 Reading TokensRegex rules from edu/stanford/nlp/models/sutime/english.holidays.sutime.txt
 Adding annotator parse
-Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [1.2 sec].
+Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [1.1 sec].
 Adding annotator dcoref
 
 Ready to process: 1 files, skipped 0, total 1
-Processing file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text ... writing to /private/var/folders/4b/f_x8j3mx7639pt53s3145lf00000gn/T/tmpYXZ7mL/text.xml {
-  Annotating file /Users/philipmassey/Documents/School Work/Carnegie Mellon 2013-2014/11-411 Natural Language Processing/WikiAsk/Answer/texttemp/text [5.712 seconds]
-} [5.911 seconds]
+Processing file /afs/andrew.cmu.edu/usr3/pmassey/Public/project/WikiAsk/Answer/texttemp/text ... writing to /tmp/tmpumrZXb/text.xml {
+  Annotating file /afs/andrew.cmu.edu/usr3/pmassey/Public/project/WikiAsk/Answer/texttemp/text WARNING: Parsing of sentence failed, possibly because of out of memory.  Will ignore and continue: two numbers : singular and plural This degree of inflection is considerably less than in Old High German and in other old Indo-European languages such as Latin , Ancient Greek , or Sanskrit , and somewhat less than , for instance , in modern Icelandic and Russian.The three genders have collapsed in the plural , which now behaves , grammatically , somewhat as a fourth gender.With four cases and three genders plus plural there are 16 distinct possible combinations of case and gender/number , but presently there are only six forms of the definite article used for the 16 possibilities.Inflection for case on the noun itself is required in the singular for strong masculine and neuter nouns in the genitive and sometimes in the dative.Both of these cases are losing ground to substitutes in informal speech.The dative ending is considered somewhat old-fashioned in many contexts and often dropped , but it is still used in proverbs and the like , in formal speech and in written language.Weak masculine nouns share a common case ending for genitive , dative and accusative in the singular.Feminine nouns are not declined in the singular.The plural does have an inflection for the dative.In total , seven inflectional endings -LRB- not counting plural markers -RRB- exist in German : - s , - es , - n , - ns , - en , - ens , - e. '' -RRB- This convention is almost unique to German today -LRB- shared perhaps only by the closely related Luxemburgish language and several insular dialects of the North Frisian language -RRB- , although it was historically common in other languages such as Danish and English .
+[11:55.267 minutes]
+} [11:56.535 minutes]
 Processed 1 documents
 Skipped 0 documents, error annotating 0 documents
 Annotation pipeline timing information:
-PTBTokenizerAnnotator: 0.0 sec.
+PTBTokenizerAnnotator: 0.1 sec.
 WordsToSentencesAnnotator: 0.0 sec.
-POSTaggerAnnotator: 0.1 sec.
-MorphaAnnotator: 0.0 sec.
-NERCombinerAnnotator: 1.8 sec.
-ParserAnnotator: 2.7 sec.
-DeterministicCorefAnnotator: 1.1 sec.
-TOTAL: 5.7 sec. for 199 tokens at 34.8 tokens/sec.
-Pipeline setup: 35.4 sec.
-Total time for StanfordCoreNLP pipeline: 41.3 sec.
+POSTaggerAnnotator: 0.8 sec.
+MorphaAnnotator: 0.1 sec.
+NERCombinerAnnotator: 13.3 sec.
+ParserAnnotator: 632.4 sec.
+DeterministicCorefAnnotator: 68.5 sec.
+TOTAL: 715.3 sec. for 7442 tokens at 10.4 tokens/sec.
+Pipeline setup: 31.5 sec.
+Total time for StanfordCoreNLP pipeline: 748.1 sec.
